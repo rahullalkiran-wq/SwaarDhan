@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SwaarDhan - स्वरधन | Bharat ka AI Financial Companion</title>
+<meta name="description" content="SwaarDhan - Voice-based AI banking assistant for rural India. Speak in your language, manage money safely.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green-deep: #0a3d2e;
+  --green-mid: #0f5c42;
+  --green-bright: #16a96b;
+  --green-glow: #1de99b;
+  --gold: #f5c842;
+  --gold-soft: #fde89a;
+  --cream: #fdf8ed;
+  --white: #ffffff;
+  --dark: #061a12;
+  --text-body: #1a3828;
+  --text-muted: #5a8070;
+  --card-bg: rgba(255,255,255,0.92);
+  --shadow-soft: 0 8px 40px rgba(10,61,46,0.12);
+  --shadow-card: 0 4px 24px rgba(10,61,46,0.1);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+
+  /* Simple mode overrides */
+  --simple-font-scale: 1;
+  --simple-spacing: 1;
+}
+
+/* ============ SIMPLE MODE ============ */
+body.simple-mode {
+  --simple-font-scale: 1.25;
+}
+body.simple-mode .hero-tagline { font-size: clamp(1.5rem, 5vw, 2.8rem); }
+body.simple-mode .section-title { font-size: clamp(1.8rem, 5vw, 3rem); }
+body.simple-mode .feature-card-title { font-size: 1.5rem; }
+body.simple-mode .feature-card-desc { font-size: 1.15rem; line-height: 1.9; }
+body.simple-mode .step-text { font-size: 1.2rem; }
+body.simple-mode .btn-primary, body.simple-mode .btn-outline { font-size: 1.2rem; padding: 18px 36px; }
+body.simple-mode .stat-number { font-size: 2.8rem; }
+body.simple-mode .nav-link { display: none; }
+body.simple-mode .hero-badge { font-size: 1rem; padding: 10px 20px; }
+body.simple-mode .feature-icon { font-size: 3.5rem; }
+body.simple-mode .step-icon { font-size: 3rem; }
+body.simple-mode .complex-only { display: none !important; }
+body:not(.simple-mode) .simple-only { display: none !important; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--cream);
+  color: var(--text-body);
+  overflow-x: hidden;
+  transition: var(--transition);
+}
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--green-bright); border-radius: 10px; }
+
+/* ============ TOPBAR ============ */
+.topbar {
+  background: var(--green-deep);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--green-bright), var(--green-glow));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 16px rgba(29,233,155,0.4);
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.3px;
+}
+
+.logo-text span { color: var(--gold); }
+
+/* MODE TOGGLE */
+.mode-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mode-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  white-space: nowrap;
+}
+
+.mode-toggle {
+  position: relative;
+  display: flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 30px;
+  padding: 3px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.mode-btn {
+  padding: 6px 14px;
+  border-radius: 24px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.mode-btn.active {
+  background: var(--gold);
+  color: var(--green-deep);
+  box-shadow: 0 2px 10px rgba(245,200,66,0.4);
+}
+
+/* LANG SELECTOR */
+.lang-selector {
+  position: relative;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 7px 14px;
+  border-radius: 24px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.lang-btn:hover { background: rgba(255,255,255,0.2); }
+
+.lang-flag { font-size: 1rem; }
+
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--green-deep);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-sm);
+  min-width: 180px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: var(--transition);
+  z-index: 100;
+}
+
+.lang-dropdown.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.lang-option:hover, .lang-option.active {
+  background: rgba(22,169,107,0.3);
+  color: var(--green-glow);
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ============ NAV ============ */
+nav.navbar {
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(12px);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  border-bottom: 1px solid rgba(22,169,107,0.15);
+  height: 50px;
+}
+
+.nav-link {
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.nav-link:hover { color: var(--green-bright); background: rgba(22,169,107,0.08); }
+
+.nav-cta {
+  background: var(--green-bright);
+  color: white !important;
+  padding: 8px 20px !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  margin-left: 8px;
+  box-shadow: 0 4px 14px rgba(22,169,107,0.35);
+}
+
+.nav-cta:hover { background: var(--green-mid) !important; transform: translateY(-1px); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: calc(100vh - 100px);
+  background: linear-gradient(150deg, var(--green-deep) 0%, var(--green-mid) 50%, #0d4a35 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 60px 24px;
+}
+
+/* Animated background elements */
+.hero-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,233,155,0.15) 0%, transparent 70%);
+  animation: pulse-float 6s ease-in-out infinite;
+}
+.hero-bg-circle:nth-child(1) { width: 600px; height: 600px; top: -200px; right: -100px; animation-delay: 0s; }
+.hero-bg-circle:nth-child(2) { width: 400px; height: 400px; bottom: -100px; left: -100px; animation-delay: 2s; }
+.hero-bg-circle:nth-child(3) { width: 200px; height: 200px; top: 40%; left: 40%; animation-delay: 4s; }
+
+.hero-grid-lines {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(29,233,155,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(29,233,155,0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-slide 20s linear infinite;
+}
+
+@keyframes grid-slide { from { background-position: 0 0; } to { background-position: 50px 50px; } }
+@keyframes pulse-float {
+  0%, 100% { transform: scale(1) translateY(0); opacity: 0.6; }
+  50% { transform: scale(1.1) translateY(-20px); opacity: 1; }
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content { display: flex; flex-direction: column; gap: 24px; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,200,66,0.15);
+  border: 1px solid rgba(245,200,66,0.4);
+  color: var(--gold);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  width: fit-content;
+  animation: fadeInUp 0.6s ease both;
+  letter-spacing: 0.5px;
+}
+
+.hero-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.15;
+  animation: fadeInUp 0.6s 0.1s ease both;
+}
+
+.hero-title .accent { color: var(--green-glow); }
+.hero-title .devanagari {
+  font-family: 'Baloo 2', cursive;
+  color: var(--gold);
+  display: block;
+  font-size: 0.55em;
+  font-weight: 600;
+  opacity: 0.9;
+  letter-spacing: 2px;
+}
+
+.hero-tagline {
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  color: rgba(255,255,255,0.8);
+  line-height: 1.7;
+  animation: fadeInUp 0.6s 0.2s ease both;
+  max-width: 520px;
+}
+
+.hero-langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  animation: fadeInUp 0.6s 0.3s ease both;
+}
+
+.lang-chip {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.6s 0.4s ease both;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--green-bright), var(--green-glow));
+  color: var(--green-deep);
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  box-shadow: 0 6px 24px rgba(22,169,107,0.45);
+}
+
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(22,169,107,0.55); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--white);
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); transform: translateY(-2px); }
+
+/* HERO VISUAL */
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInUp 0.8s 0.3s ease both;
+}
+
+.phone-mockup {
+  width: 280px;
+  height: 560px;
+  background: linear-gradient(160deg, #1a2e25, #0d1f18);
+  border-radius: 40px;
+  border: 2px solid rgba(29,233,155,0.3);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 6px rgba(22,169,107,0.1), inset 0 0 60px rgba(29,233,155,0.05);
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.phone-notch {
+  width: 100px;
+  height: 24px;
+  background: #0d1f18;
+  border-radius: 0 0 16px 16px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 3;
+}
+
+.phone-screen {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phone-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.phone-logo {
+  font-family: 'Baloo 2', cursive;
+  color: var(--green-glow);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.phone-balance-card {
+  background: linear-gradient(135deg, var(--green-bright), var(--green-glow));
+  border-radius: 16px;
+  padding: 16px;
+  color: var(--green-deep);
+}
+
+.balance-label { font-size: 0.65rem; font-weight: 600; opacity: 0.7; }
+.balance-amount { font-size: 1.6rem; font-weight: 800; margin: 2px 0; }
+.balance-sub { font-size: 0.65rem; opacity: 0.7; }
+
+.phone-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.phone-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(29,233,155,0.08);
+  border-radius: 12px;
+  padding: 10px 4px;
+  border: 1px solid rgba(29,233,155,0.15);
+}
+
+.phone-action-icon { font-size: 1.2rem; }
+.phone-action-label { font-size: 0.55rem; color: rgba(255,255,255,0.7); font-weight: 500; }
+
+.phone-mic-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.mic-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-bright), var(--green-glow));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 0 0 8px rgba(29,233,155,0.15), 0 0 0 16px rgba(29,233,155,0.07);
+  animation: mic-pulse 2s ease-in-out infinite;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 8px rgba(29,233,155,0.15), 0 0 0 16px rgba(29,233,155,0.07); }
+  50% { box-shadow: 0 0 0 12px rgba(29,233,155,0.2), 0 0 0 24px rgba(29,233,155,0.07); }
+}
+
+.mic-text { color: rgba(255,255,255,0.6); font-size: 0.65rem; font-weight: 500; }
+
+.phone-txn-list { display: flex; flex-direction: column; gap: 6px; }
+
+.phone-txn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.txn-info { display: flex; align-items: center; gap: 8px; }
+.txn-icon { font-size: 1rem; }
+.txn-name { font-size: 0.6rem; color: rgba(255,255,255,0.8); font-weight: 500; }
+.txn-date { font-size: 0.5rem; color: rgba(255,255,255,0.4); }
+.txn-amount { font-size: 0.65rem; font-weight: 700; }
+.txn-amount.debit { color: #ff6b6b; }
+.txn-amount.credit { color: var(--green-glow); }
+
+/* Floating badges around phone */
+.float-badge {
+  position: absolute;
+  background: white;
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-body);
+  white-space: nowrap;
+  animation: float-anim 4s ease-in-out infinite;
+}
+
+.float-badge:nth-child(2) { top: 60px; left: -80px; animation-delay: 0s; }
+.float-badge:nth-child(3) { top: 40%; right: -80px; animation-delay: 1.5s; }
+.float-badge:nth-child(4) { bottom: 80px; left: -60px; animation-delay: 3s; }
+
+@keyframes float-anim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.float-badge .badge-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green-bright);
+  animation: dot-blink 1.5s ease-in-out infinite;
+}
+
+@keyframes dot-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ============ STATS ============ */
+.stats-bar {
+  background: var(--white);
+  padding: 28px 24px;
+  border-bottom: 1px solid rgba(22,169,107,0.1);
+}
+
+.stats-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.stat-number {
+  font-family: 'Baloo 2', cursive;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--green-bright);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.stat-divider {
+  width: 1px;
+  background: rgba(22,169,107,0.2);
+  align-self: stretch;
+  margin: 0 10px;
+}
+
+/* ============ SECTIONS COMMON ============ */
+section { padding: 80px 24px; }
+
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--green-bright);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: var(--green-deep);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  max-width: 580px;
+}
+
+/* ============ FEATURES ============ */
+.features-section { background: var(--cream); }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.feature-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 32px;
+  border: 1px solid rgba(22,169,107,0.1);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green-bright), var(--green-glow));
+  transform: scaleX(0);
+  transition: var(--transition);
+  transform-origin: left;
+}
+
+.feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-soft); }
+.feature-card:hover::before { transform: scaleX(1); }
+
+.feature-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(22,169,107,0.2));
+}
+
+.feature-card-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin-bottom: 10px;
+}
+
+.feature-card-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.feature-tag {
+  background: rgba(22,169,107,0.08);
+  color: var(--green-mid);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid rgba(22,169,107,0.15);
+}
+
+/* ============ HOW IT WORKS ============ */
+.howitworks-section { background: var(--green-deep); color: white; position: relative; overflow: hidden; }
+
+.howitworks-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231de99b' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.howitworks-section .section-title { color: white; }
+.howitworks-section .section-desc { color: rgba(255,255,255,0.7); max-width: 600px; }
+.howitworks-section .section-eyebrow { color: var(--green-glow); }
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px;
+  margin-top: 56px;
+  position: relative;
+  z-index: 1;
+}
+
+.step-connector {
+  display: none;
+}
+
+.step-card {
+  text-align: center;
+  position: relative;
+}
+
+.step-number {
+  font-family: 'Baloo 2', cursive;
+  font-size: 5rem;
+  font-weight: 800;
+  color: rgba(29,233,155,0.08);
+  line-height: 1;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.step-icon-wrap {
+  width: 80px;
+  height: 80px;
+  background: rgba(29,233,155,0.1);
+  border: 1.5px solid rgba(29,233,155,0.25);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  position: relative;
+  z-index: 1;
+  transition: var(--transition);
+}
+
+.step-card:hover .step-icon-wrap {
+  background: rgba(29,233,155,0.2);
+  border-color: var(--green-glow);
+  transform: scale(1.05);
+}
+
+.step-icon { font-size: 2.2rem; }
+
+.step-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.step-text {
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+}
+
+/* ============ SCHEMES SECTION ============ */
+.schemes-section { background: white; }
+
+.schemes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.scheme-card {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid rgba(22,169,107,0.12);
+  transition: var(--transition);
+  box-shadow: var(--shadow-card);
+}
+
+.scheme-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); }
+
+.scheme-header {
+  padding: 20px 24px 16px;
+  background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+}
+
+.scheme-name {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.scheme-full-name {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.4;
+}
+
+.scheme-body {
+  padding: 16px 24px 20px;
+  background: white;
+}
+
+.scheme-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(22,169,107,0.07);
+}
+
+.scheme-stat:last-child { border-bottom: none; }
+.scheme-stat-label { font-size: 0.78rem; color: var(--text-muted); }
+.scheme-stat-val { font-size: 0.82rem; font-weight: 700; color: var(--green-mid); }
+
+.scheme-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  background: rgba(22,169,107,0.08);
+  color: var(--green-bright);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* ============ TRUST SECTION ============ */
+.trust-section { background: var(--cream); }
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.trust-list { display: flex; flex-direction: column; gap: 20px; }
+
+.trust-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: white;
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(22,169,107,0.1);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+}
+
+.trust-item:hover { transform: translateX(4px); border-color: var(--green-bright); }
+
+.trust-icon-wrap {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--green-bright), var(--green-glow));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.trust-item-title { font-weight: 700; color: var(--green-deep); margin-bottom: 4px; font-size: 1rem; }
+.trust-item-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+
+.trust-visual {
+  background: linear-gradient(150deg, var(--green-deep), var(--green-mid));
+  border-radius: var(--radius);
+  padding: 40px;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.trust-visual::before {
+  content: '🔒';
+  position: absolute;
+  font-size: 12rem;
+  opacity: 0.04;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.trust-big-text {
+  font-family: 'Baloo 2', cursive;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--green-glow);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.trust-mid-text { font-size: 1rem; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+
+.trust-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.trust-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.85);
+}
+
+.trust-check-dot {
+  width: 20px; height: 20px;
+  background: rgba(29,233,155,0.2);
+  border: 1px solid var(--green-glow);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  color: var(--green-glow);
+  flex-shrink: 0;
+}
+
+/* ============ SIMPLE MODE FEATURES ============ */
+.simple-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.simple-feature {
+  background: white;
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  border: 2px solid rgba(22,169,107,0.15);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+}
+
+.simple-feature:hover { border-color: var(--green-bright); transform: translateY(-4px); }
+
+.simple-feature-emoji { font-size: 4rem; display: block; margin-bottom: 16px; }
+.simple-feature-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin-bottom: 8px;
+}
+.simple-feature-desc { font-size: 1rem; color: var(--text-muted); line-height: 1.7; }
+
+/* ============ CTA ============ */
+.cta-section {
+  background: linear-gradient(135deg, var(--green-deep), #0d4035);
+  padding: 80px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(29,233,155,0.12) 0%, transparent 70%);
+}
+
+.cta-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 800;
+  color: white;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-desc {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #e8b820);
+  color: var(--green-deep);
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  box-shadow: 0 8px 24px rgba(245,200,66,0.4);
+}
+
+.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(245,200,66,0.5); }
+
+/* ============ FOOTER ============ */
+footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.7);
+  padding: 56px 24px 32px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+.footer-brand { display: flex; flex-direction: column; gap: 16px; }
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.footer-logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--green-bright), var(--green-glow));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+
+.footer-logo-text {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+}
+
+.footer-logo-text span { color: var(--gold); }
+
+.footer-tagline {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.5);
+}
+
+.footer-col-title {
+  font-weight: 700;
+  color: white;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-link {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--green-glow); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: gap;
+  gap: 16px;
+}
+
+.footer-copy { font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+.footer-hackathon {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+  text-align: right;
+}
+
+.footer-hackathon span { color: var(--gold); font-weight: 600; }
+
+/* ============ ANIMATIONS ============ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .hero-container { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .hero-content { align-items: center; }
+  .hero-visual { display: none; }
+  .trust-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .topbar { padding: 8px 16px; }
+  .logo-text { font-size: 1.1rem; }
+  .mode-label { display: none; }
+  nav.navbar { padding: 0 16px; overflow-x: auto; }
+  section { padding: 56px 16px; }
+  .hero { padding: 48px 16px; }
+  .stat-divider { display: none; }
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .float-badge { display: none; }
+}
+
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions a, .hero-actions button { text-align: center; justify-content: center; }
+  .schemes-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr 1fr; }
+  .topbar-left { gap: 8px; }
+}
+
+/* ============ LANGUAGE FONTS ============ */
+[data-lang="hi"] .hero-title, [data-lang="hi"] .section-title, [data-lang="hi"] .feature-card-title,
+[data-lang="hi"] .step-title, [data-lang="hi"] .scheme-name {
+  font-family: 'Noto Sans Devanagari', 'Baloo 2', cursive;
+}
+
+/* ============ TICKER ============ */
+.ticker-wrap {
+  background: var(--green-bright);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 0;
+}
+
+.ticker-track {
+  display: inline-flex;
+  gap: 0;
+  animation: ticker 30s linear infinite;
+}
+
+.ticker-item {
+  padding: 0 32px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--green-deep);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticker-dot { color: var(--green-deep); opacity: 0.5; }
+
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ============ VOICE DEMO BAR ============ */
+.voice-demo {
+  background: var(--green-deep);
+  padding: 20px 24px;
+  border-top: 1px solid rgba(29,233,155,0.15);
+}
+
+.voice-demo-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.voice-demo-label {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.voice-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.voice-chip {
+  background: rgba(29,233,155,0.1);
+  border: 1px solid rgba(29,233,155,0.25);
+  color: var(--green-glow);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.voice-chip:hover { background: rgba(29,233,155,0.2); transform: scale(1.04); }
+</style>
+</head>
+
+<body class="simple-mode" data-lang="hi">
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="#" class="logo-mark">
+      <div class="logo-icon">🌱</div>
+      <div class="logo-text">Swaar<span>Dhan</span></div>
+    </a>
+
+    <div class="mode-toggle-wrap">
+      <span class="mode-label" id="modeLabelText">Mode:</span>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="simpleBtn" onclick="setMode('simple')">
+          🌾 <span data-key="simpleMode">Simple</span>
+        </button>
+        <button class="mode-btn" id="advancedBtn" onclick="setMode('advanced')">
+          🚀 <span data-key="advancedMode">Advanced</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="lang-selector">
+      <button class="lang-btn" onclick="toggleLangMenu()" id="langBtn">
+        <span class="lang-flag" id="currentFlag">🇮🇳</span>
+        <span id="currentLang">हिन्दी</span>
+        <span>▾</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <div class="lang-option active" onclick="setLang('hi')">🇮🇳 हिन्दी <small>Hindi</small></div>
+        <div class="lang-option" onclick="setLang('en')">🇬🇧 English</div>
+        <div class="lang-option" onclick="setLang('ta')">🇮🇳 தமிழ் <small>Tamil</small></div>
+        <div class="lang-option" onclick="setLang('te')">🇮🇳 తెలుగు <small>Telugu</small></div>
+        <div class="lang-option" onclick="setLang('bn')">🇮🇳 বাংলা <small>Bengali</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ticker -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="tickerTrack">
+    <span class="ticker-item">🎙️ <span data-key="tick1">Speak in your language — बोलो अपनी भाषा में</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">🏦 <span data-key="tick2">Bank Balance • Fund Transfer • Bill Payment</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">🛡️ <span data-key="tick3">PM Schemes: PMJJBY • PMSBY • PMFBY • PMJAY • APY</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">🔒 <span data-key="tick4">256-bit Encrypted • RBI Compliant</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">📸 <span data-key="tick5">Screenshot Help • Fraud Shield</span> <span class="ticker-dot">◆</span></span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ticker-item">🎙️ <span>Speak in your language — बोलो अपनी भाषा में</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">🏦 <span>Bank Balance • Fund Transfer • Bill Payment</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">🛡️ <span>PM Schemes: PMJJBY • PMSBY • PMFBY • PMJAY • APY</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">🔒 <span>256-bit Encrypted • RBI Compliant</span> <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">📸 <span>Screenshot Help • Fraud Shield</span> <span class="ticker-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- ============ NAV ============ -->
+<nav class="navbar">
+  <a href="#features" class="nav-link" data-key="navFeatures">Features</a>
+  <a href="#howitworks" class="nav-link" data-key="navHow">How it Works</a>
+  <a href="#schemes" class="nav-link" data-key="navSchemes">PM Schemes</a>
+  <a href="#security" class="nav-link" data-key="navSecurity">Security</a>
+  <a href="#contact" class="nav-link nav-cta" data-key="navStart">Get Started →</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-bg-circle"></div>
+  <div class="hero-bg-circle"></div>
+  <div class="hero-grid-lines"></div>
+
+  <div class="hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        🏆 <span data-key="badge">Smart AI Hackathon 1.0 — PS-018</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="devanagari" data-key="heroDevanagari">स्वरधन — भारत का AI वित्तीय साथी</span>
+        <span data-key="heroLine1">Your Voice,</span><br>
+        <span class="accent" data-key="heroLine2">Your Money,</span><br>
+        <span data-key="heroLine3">Your Language</span>
+      </h1>
+      <p class="hero-tagline" data-key="heroTagline">
+        Speak to your bank in Hindi, Tamil, Telugu, Bengali or English. Manage money, check schemes, detect fraud — all by just talking.
+      </p>
+      <div class="hero-langs">
+        <span class="lang-chip">🎙️ हिन्दी</span>
+        <span class="lang-chip">தமிழ்</span>
+        <span class="lang-chip">తెలుగు</span>
+        <span class="lang-chip">বাংলা</span>
+        <span class="lang-chip">English</span>
+      </div>
+      <div class="hero-actions">
+        <a href="#howitworks" class="btn-primary">
+          🎙️ <span data-key="heroCta1">Start Talking Now</span>
+        </a>
+        <a href="#features" class="btn-outline">
+          <span data-key="heroCta2">See Features</span> →
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <!-- Floating badges -->
+      <div class="float-badge">
+        <div class="badge-dot"></div>
+        <span data-key="floatBadge1">✓ Balance Updated</span>
+      </div>
+      <div class="float-badge">
+        <div class="badge-dot"></div>
+        <span>🛡️ <span data-key="floatBadge2">Fraud Blocked</span></span>
+      </div>
+      <div class="float-badge">
+        <div class="badge-dot"></div>
+        <span>🌱 <span data-key="floatBadge3">KCC Eligible!</span></span>
+      </div>
+
+      <!-- Phone Mockup -->
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-header">
+            <span class="phone-logo">SwaarDhan 🌱</span>
+            <span style="font-size:0.65rem;color:rgba(29,233,155,0.7);font-weight:600;">● LIVE</span>
+          </div>
+          <div class="phone-balance-card">
+            <div class="balance-label">TOTAL BALANCE</div>
+            <div class="balance-amount">₹24,580</div>
+            <div class="balance-sub">SBI Savings • ****4521</div>
+          </div>
+          <div class="phone-actions">
+            <div class="phone-action">
+              <div class="phone-action-icon">💸</div>
+              <div class="phone-action-label">Transfer</div>
+            </div>
+            <div class="phone-action">
+              <div class="phone-action-icon">📄</div>
+              <div class="phone-action-label">Statement</div>
+            </div>
+            <div class="phone-action">
+              <div class="phone-action-icon">🛡️</div>
+              <div class="phone-action-label">Schemes</div>
+            </div>
+            <div class="phone-action">
+              <div class="phone-action-icon">📸</div>
+              <div class="phone-action-label">Screenshot</div>
+            </div>
+          </div>
+          <div class="phone-mic-section">
+            <div class="mic-btn">🎙️</div>
+            <div class="mic-text" data-key="micText">बोलिए... Speak now</div>
+          </div>
+          <div class="phone-txn-list">
+            <div class="phone-txn">
+              <div class="txn-info">
+                <div class="txn-icon">🛒</div>
+                <div>
+                  <div class="txn-name">Ration Store</div>
+                  <div class="txn-date">Today, 11:20 AM</div>
+                </div>
+              </div>
+              <div class="txn-amount debit">-₹450</div>
+            </div>
+            <div class="phone-txn">
+              <div class="txn-info">
+                <div class="txn-icon">💰</div>
+                <div>
+                  <div class="txn-name">PM-KISAN</div>
+                  <div class="txn-date">Yesterday</div>
+                </div>
+              </div>
+              <div class="txn-amount credit">+₹2,000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <div class="stat-number">5</div>
+      <div class="stat-label" data-key="stat1">Indian Languages</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item reveal">
+      <div class="stat-number">8</div>
+      <div class="stat-label" data-key="stat2">AI Workflows</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item reveal">
+      <div class="stat-number">5</div>
+      <div class="stat-label" data-key="stat3">PM Schemes Covered</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item reveal">
+      <div class="stat-number">15+</div>
+      <div class="stat-label" data-key="stat4">Fraud Patterns</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item reveal">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label" data-key="stat5">AI Available</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VOICE DEMO BAR ============ -->
+<div class="voice-demo">
+  <div class="voice-demo-inner">
+    <div class="voice-demo-label" data-key="tryVoice">Try saying:</div>
+    <div class="voice-chips">
+      <div class="voice-chip" data-key="vc1">"मेरा बैलेंस बताओ"</div>
+      <div class="voice-chip" data-key="vc2">"₹500 transfer karo"</div>
+      <div class="voice-chip" data-key="vc3">"என் balance என்ன?"</div>
+      <div class="voice-chip" data-key="vc4">"PMJJBY eligible hu?"</div>
+      <div class="voice-chip" data-key="vc5">"My last 5 transactions"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FEATURES ============ -->
+<section class="features-section" id="features">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">⚡ <span data-key="featEyebrow">What SwaarDhan Can Do</span></div>
+      <h2 class="section-title" data-key="featTitle">Your Complete<br>Financial Assistant</h2>
+      <p class="section-desc" data-key="featDesc">Everything a rural family needs — banking, insurance, loans, fraud protection — in one voice-powered app.</p>
+    </div>
+
+    <!-- Simple Mode: Big icon grid -->
+    <div class="simple-feature-grid simple-only">
+      <div class="simple-feature reveal">
+        <span class="simple-feature-emoji">🏦</span>
+        <div class="simple-feature-title" data-key="sf1t">Banking</div>
+        <div class="simple-feature-desc" data-key="sf1d">Balance, Transfer, Statement, Bills</div>
+      </div>
+      <div class="simple-feature reveal">
+        <span class="simple-feature-emoji">🛡️</span>
+        <div class="simple-feature-title" data-key="sf2t">Insurance</div>
+        <div class="simple-feature-desc" data-key="sf2d">PM Schemes for your family</div>
+      </div>
+      <div class="simple-feature reveal">
+        <span class="simple-feature-emoji">💰</span>
+        <div class="simple-feature-title" data-key="sf3t">Loans</div>
+        <div class="simple-feature-desc" data-key="sf3d">KCC, MUDRA, SHG Loans</div>
+      </div>
+      <div class="simple-feature reveal">
+        <span class="simple-feature-emoji">🚨</span>
+        <div class="simple-feature-title" data-key="sf4t">Fraud Alert</div>
+        <div class="simple-feature-desc" data-key="sf4d">Protect from scams & fraud</div>
+      </div>
+      <div class="simple-feature reveal">
+        <span class="simple-feature-emoji">📸</span>
+        <div class="simple-feature-title" data-key="sf5t">Screenshot Help</div>
+        <div class="simple-feature-desc" data-key="sf5d">AI explains any error for you</div>
+      </div>
+      <div class="simple-feature reveal">
+        <span class="simple-feature-emoji">🎯</span>
+        <div class="simple-feature-title" data-key="sf6t">Savings Goal</div>
+        <div class="simple-feature-desc" data-key="sf6d">Save for your dreams</div>
+      </div>
+    </div>
+
+    <!-- Advanced Mode: Detailed cards -->
+    <div class="features-grid complex-only">
+      <div class="feature-card reveal">
+        <span class="feature-icon">🏦</span>
+        <div class="feature-card-title" data-key="f1t">Smart Banking</div>
+        <p class="feature-card-desc" data-key="f1d">Check balance, transfer funds with PIN authentication, view mini-statements, pay bills — all via voice commands in your language.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Balance</span>
+          <span class="feature-tag">Transfer</span>
+          <span class="feature-tag">Bills</span>
+          <span class="feature-tag">Statement</span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">🛡️</span>
+        <div class="feature-card-title" data-key="f2t">Insurance & Schemes</div>
+        <p class="feature-card-desc" data-key="f2d">Instantly check eligibility for all 5 PM schemes. Get step-by-step enrollment guidance for PMJJBY, PMSBY, PMFBY, PMJAY & APY.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">PMJJBY</span>
+          <span class="feature-tag">PMSBY</span>
+          <span class="feature-tag">PMFBY</span>
+          <span class="feature-tag">APY</span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">💰</span>
+        <div class="feature-card-title" data-key="f3t">Loan Advisory</div>
+        <p class="feature-card-desc" data-key="f3d">EMI calculations, loan eligibility checks, escape plans from moneylenders, Kisan Credit Card guide — all AI-powered.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">EMI Calc</span>
+          <span class="feature-tag">KCC</span>
+          <span class="feature-tag">MUDRA</span>
+          <span class="feature-tag">Moneylender Escape</span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">🔍</span>
+        <div class="feature-card-title" data-key="f4t">Screenshot Explainer</div>
+        <p class="feature-card-desc" data-key="f4d">Take a photo of any banking error or confusing screen. Groq Vision AI explains it in simple language with step-by-step solutions.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Groq Vision</span>
+          <span class="feature-tag">Error Resolver</span>
+          <span class="feature-tag">50+ Errors</span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">🚨</span>
+        <div class="feature-card-title" data-key="f5t">Fraud Shield</div>
+        <p class="feature-card-desc" data-key="f5d">Detects 15+ fraud patterns including OTP harvesting, fake bank calls, KYC scams, lottery fraud. Instant HIGH/MEDIUM/LOW risk alerts.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">OTP Scams</span>
+          <span class="feature-tag">Fake Apps</span>
+          <span class="feature-tag">KYC Fraud</span>
+          <span class="feature-tag">Cyber 1930</span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">📅</span>
+        <div class="feature-card-title" data-key="f6t">Weekly Digest</div>
+        <p class="feature-card-desc" data-key="f6d">Every Monday 9 AM — get a personalized financial digest on Telegram & email. Spending summary, scheme renewals, savings goals progress.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Telegram</span>
+          <span class="feature-tag">Gmail</span>
+          <span class="feature-tag">Auto CRON</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="howitworks-section" id="howitworks">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">🔄 <span data-key="howEyebrow">Simple Process</span></div>
+      <h2 class="section-title" data-key="howTitle">How SwaarDhan Works</h2>
+      <p class="section-desc" data-key="howDesc">Four easy steps from speaking your request to getting a helpful answer — powered by Groq's ultra-fast AI.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-number">01</div>
+        <div class="step-icon-wrap"><div class="step-icon">🎙️</div></div>
+        <div class="step-title" data-key="step1t">You Speak</div>
+        <p class="step-text" data-key="step1d">Say anything in Hindi, Tamil, Telugu, Bengali or English. No typing needed. Just talk naturally.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-number">02</div>
+        <div class="step-icon-wrap"><div class="step-icon">🧠</div></div>
+        <div class="step-title" data-key="step2t">AI Understands</div>
+        <p class="step-text" data-key="step2d">Groq AI instantly understands your intent — balance, transfer, fraud, scheme — and routes to the right workflow.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-number">03</div>
+        <div class="step-icon-wrap"><div class="step-icon">⚡</div></div>
+        <div class="step-title" data-key="step3t">Action Happens</div>
+        <p class="step-text" data-key="step3d">n8n workflows securely connect to your bank via Supabase. Your transaction happens in seconds.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-number">04</div>
+        <div class="step-icon-wrap"><div class="step-icon">📢</div></div>
+        <div class="step-title" data-key="step4t">You Hear Result</div>
+        <p class="step-text" data-key="step4d">AI responds in your language with a clear voice answer. Your financial life becomes simple and secure.</p>
+      </div>
+    </div>
+
+    <!-- Tech stack — only in advanced mode -->
+    <div class="complex-only" style="margin-top:48px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;z-index:1;">
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:8px 20px;border-radius:20px;font-size:0.82rem;font-weight:600;">⚡ Groq LLaMA 3.1 70B</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:8px 20px;border-radius:20px;font-size:0.82rem;font-weight:600;">🔀 n8n Workflows</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:8px 20px;border-radius:20px;font-size:0.82rem;font-weight:600;">🗄️ Supabase PostgreSQL</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:8px 20px;border-radius:20px;font-size:0.82rem;font-weight:600;">🐍 FastAPI Router</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:8px 20px;border-radius:20px;font-size:0.82rem;font-weight:600;">👁️ Groq Llama Vision</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:8px 20px;border-radius:20px;font-size:0.82rem;font-weight:600;">📱 Telegram Bot</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHEMES ============ -->
+<section class="schemes-section" id="schemes">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">🏛️ <span data-key="schEyebrow">Government Schemes</span></div>
+      <h2 class="section-title" data-key="schTitle">PM Schemes Made Simple</h2>
+      <p class="section-desc" data-key="schDesc">SwaarDhan automatically checks which government schemes you qualify for and guides you through enrollment — in your language.</p>
+    </div>
+
+    <div class="schemes-grid">
+      <div class="scheme-card reveal">
+        <div class="scheme-header">
+          <div class="scheme-name">PMJJBY</div>
+          <div class="scheme-full-name">Pradhan Mantri Jeevan Jyoti Bima Yojana</div>
+        </div>
+        <div class="scheme-body">
+          <div class="scheme-stat"><span class="scheme-stat-label" data-key="sch_premium">Annual Premium</span><span class="scheme-stat-val">₹330 / year</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label" data-key="sch_cover">Life Cover</span><span class="scheme-stat-val">₹2,00,000</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label" data-key="sch_age">Age</span><span class="scheme-stat-val">18 – 50 years</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label" data-key="sch_need">Need</span><span class="scheme-stat-val">Bank Account</span></div>
+          <div class="scheme-badge">✓ <span data-key="sch_ai">AI checks eligibility</span></div>
+        </div>
+      </div>
+      <div class="scheme-card reveal">
+        <div class="scheme-header">
+          <div class="scheme-name">PMSBY</div>
+          <div class="scheme-full-name">Pradhan Mantri Suraksha Bima Yojana</div>
+        </div>
+        <div class="scheme-body">
+          <div class="scheme-stat"><span class="scheme-stat-label">Annual Premium</span><span class="scheme-stat-val">₹12 / year</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Accident Cover</span><span class="scheme-stat-val">₹2,00,000</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Age</span><span class="scheme-stat-val">18 – 70 years</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Need</span><span class="scheme-stat-val">Bank Account</span></div>
+          <div class="scheme-badge">✓ <span data-key="sch_ai">AI checks eligibility</span></div>
+        </div>
+      </div>
+      <div class="scheme-card reveal">
+        <div class="scheme-header">
+          <div class="scheme-name">PMFBY</div>
+          <div class="scheme-full-name">Pradhan Mantri Fasal Bima Yojana</div>
+        </div>
+        <div class="scheme-body">
+          <div class="scheme-stat"><span class="scheme-stat-label">Premium</span><span class="scheme-stat-val">2% of sum insured</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">For</span><span class="scheme-stat-val">Farmers with land</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Covers</span><span class="scheme-stat-val">Crop failure, drought</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Need</span><span class="scheme-stat-val">Land records</span></div>
+          <div class="scheme-badge">✓ <span data-key="sch_ai">AI checks eligibility</span></div>
+        </div>
+      </div>
+      <div class="scheme-card reveal">
+        <div class="scheme-header">
+          <div class="scheme-name">PMJAY</div>
+          <div class="scheme-full-name">Pradhan Mantri Jan Arogya Yojana</div>
+        </div>
+        <div class="scheme-body">
+          <div class="scheme-stat"><span class="scheme-stat-label">Premium</span><span class="scheme-stat-val">FREE</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Health Cover</span><span class="scheme-stat-val">₹5,00,000</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">For</span><span class="scheme-stat-val">BPL Families</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Need</span><span class="scheme-stat-val">Aadhaar + Ration card</span></div>
+          <div class="scheme-badge">✓ <span data-key="sch_ai">AI checks eligibility</span></div>
+        </div>
+      </div>
+      <div class="scheme-card reveal">
+        <div class="scheme-header">
+          <div class="scheme-name">APY</div>
+          <div class="scheme-full-name">Atal Pension Yojana</div>
+        </div>
+        <div class="scheme-body">
+          <div class="scheme-stat"><span class="scheme-stat-label">Monthly Premium</span><span class="scheme-stat-val">₹42 – ₹181</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Pension</span><span class="scheme-stat-val">₹1,000 – ₹5,000/mo</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Age</span><span class="scheme-stat-val">18 – 40 years</span></div>
+          <div class="scheme-stat"><span class="scheme-stat-label">Need</span><span class="scheme-stat-val">Savings Account</span></div>
+          <div class="scheme-badge">✓ <span data-key="sch_ai">AI checks eligibility</span></div>
+        </div>
+      </div>
+
+      <!-- CTA card -->
+      <div class="scheme-card reveal" style="background:linear-gradient(135deg,var(--green-deep),var(--green-mid));border:none;">
+        <div style="padding:32px;display:flex;flex-direction:column;gap:16px;height:100%;justify-content:center;">
+          <div style="font-size:3rem;">🎯</div>
+          <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:700;color:white;" data-key="schCheckTitle">Check Your Eligibility</div>
+          <p style="font-size:0.9rem;color:rgba(255,255,255,0.7);line-height:1.65;" data-key="schCheckDesc">Just say "मुझे कौन सी scheme मिलेगी?" — SwaarDhan checks all 5 schemes instantly.</p>
+          <div style="background:var(--gold);color:var(--green-deep);padding:10px 20px;border-radius:20px;font-weight:700;font-size:0.9rem;width:fit-content;cursor:pointer;" data-key="schCheckBtn">Check Now 🎙️</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECURITY / TRUST ============ -->
+<section class="trust-section" id="security">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">🔒 <span data-key="secEyebrow">Bank-Grade Security</span></div>
+      <h2 class="section-title" data-key="secTitle">Your Money is Safe</h2>
+      <p class="section-desc" data-key="secDesc">Built with the same security standards as major Indian banks. Your data never leaves secure servers.</p>
+    </div>
+
+    <div class="trust-grid">
+      <div class="trust-list">
+        <div class="trust-item reveal">
+          <div class="trust-icon-wrap">🔐</div>
+          <div>
+            <div class="trust-item-title" data-key="tr1t">bcrypt PIN Encryption</div>
+            <p class="trust-item-text" data-key="tr1d">Your 4-digit PIN is hashed using bcrypt before storage. We never see your actual PIN — even our engineers cannot.</p>
+          </div>
+        </div>
+        <div class="trust-item reveal">
+          <div class="trust-icon-wrap">🛡️</div>
+          <div>
+            <div class="trust-item-title" data-key="tr2t">Real-Time Fraud Detection</div>
+            <p class="trust-item-text" data-key="tr2d">Every transaction checks 15+ fraud patterns. Suspicious transfers are blocked before processing — not after.</p>
+          </div>
+        </div>
+        <div class="trust-item reveal">
+          <div class="trust-icon-wrap">🏛️</div>
+          <div>
+            <div class="trust-item-title" data-key="tr3t">RBI Compliant Architecture</div>
+            <p class="trust-item-text" data-key="tr3d">All data operations follow RBI data localization norms. Supabase PostgreSQL hosted in India region.</p>
+          </div>
+        </div>
+        <div class="trust-item reveal">
+          <div class="trust-icon-wrap">📡</div>
+          <div>
+            <div class="trust-item-title" data-key="tr4t">256-bit SSL Encryption</div>
+            <p class="trust-item-text" data-key="tr4d">All API calls between your device, FastAPI, n8n, and Supabase are encrypted end-to-end with TLS 1.3.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust-visual reveal">
+        <div class="trust-big-text">99.9%</div>
+        <div class="trust-mid-text" data-key="trustUptime">Uptime with Supabase Free Tier</div>
+        <div class="trust-checks">
+          <div class="trust-check"><div class="trust-check-dot">✓</div><span data-key="tc1">PIN never stored in plaintext</span></div>
+          <div class="trust-check"><div class="trust-check-dot">✓</div><span data-key="tc2">Atomic transactions — no partial debits</span></div>
+          <div class="trust-check"><div class="trust-check-dot">✓</div><span data-key="tc3">Fraud logged & flagged before transfer</span></div>
+          <div class="trust-check"><div class="trust-check-dot">✓</div><span data-key="tc4">Two-step transfer confirmation</span></div>
+          <div class="trust-check"><div class="trust-check-dot">✓</div><span data-key="tc5">Screenshot fraud auto-detected by Vision AI</span></div>
+          <div class="trust-check"><div class="trust-check-dot">✓</div><span data-key="tc6">RBI helpline 14440 always provided</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-section" id="contact">
+  <div class="cta-title" data-key="ctaTitle">Ready to try SwaarDhan?</div>
+  <p class="cta-desc" data-key="ctaDesc">Built for Bharat. Speaks your language. Protects your money. Available 24/7 by just talking.</p>
+  <div class="cta-actions">
+    <a href="#howitworks" class="btn-gold">
+      🎙️ <span data-key="ctaBtn1">Start Talking Now</span>
+    </a>
+    <a href="https://github.com" class="btn-outline" target="_blank" style="color:white;">
+      <span data-key="ctaBtn2">View on GitHub →</span>
+    </a>
+  </div>
+
+  <div style="margin-top:48px;display:flex;gap:32px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;">
+    <div style="text-align:center;">
+      <div style="font-size:2rem;">🏆</div>
+      <div style="font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:4px;" data-key="ctaBadge1">Smart AI Hackathon 1.0</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:2rem;">🇮🇳</div>
+      <div style="font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:4px;" data-key="ctaBadge2">Made for Bharat</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:2rem;">⚡</div>
+      <div style="font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:4px;" data-key="ctaBadge3">Powered by Groq AI</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:2rem;">🌱</div>
+      <div style="font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:4px;" data-key="ctaBadge4">PS-018 | Rademics</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="footer-logo">
+          <div class="footer-logo-icon">🌱</div>
+          <div class="footer-logo-text">Swaar<span>Dhan</span></div>
+        </a>
+        <p class="footer-tagline" data-key="footerTagline">
+          स्वरधन — Bharat's voice-first AI financial companion. Helping rural India manage money safely, simply, in their own language.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+          <span style="background:rgba(29,233,155,0.1);border:1px solid rgba(29,233,155,0.2);color:rgba(255,255,255,0.5);padding:4px 12px;border-radius:10px;font-size:0.72rem;">PS-018</span>
+          <span style="background:rgba(29,233,155,0.1);border:1px solid rgba(29,233,155,0.2);color:rgba(255,255,255,0.5);padding:4px 12px;border-radius:10px;font-size:0.72rem;">Rademics Research</span>
+          <span style="background:rgba(29,233,155,0.1);border:1px solid rgba(29,233,155,0.2);color:rgba(255,255,255,0.5);padding:4px 12px;border-radius:10px;font-size:0.72rem;">March 2026</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title" data-key="footCol1">Features</div>
+        <div class="footer-links">
+          <a href="#features" class="footer-link" data-key="foot1">Banking Assistant</a>
+          <a href="#schemes" class="footer-link" data-key="foot2">PM Schemes</a>
+          <a href="#features" class="footer-link" data-key="foot3">Loan Advisory</a>
+          <a href="#features" class="footer-link" data-key="foot4">Fraud Shield</a>
+          <a href="#features" class="footer-link" data-key="foot5">Weekly Digest</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title" data-key="footCol2">Technology</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Groq LLaMA 3.1</a>
+          <a href="#" class="footer-link">n8n Workflows</a>
+          <a href="#" class="footer-link">Supabase</a>
+          <a href="#" class="footer-link">FastAPI</a>
+          <a href="#" class="footer-link">Telegram Bot</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title" data-key="footCol3">Help</div>
+        <div class="footer-links">
+          <a href="#howitworks" class="footer-link" data-key="fh1">How it Works</a>
+          <a href="#security" class="footer-link" data-key="fh2">Security</a>
+          <a href="tel:1930" class="footer-link">☎️ Cyber Helpline: 1930</a>
+          <a href="tel:14440" class="footer-link">🏦 RBI Helpline: 14440</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy" data-key="footerCopy">© 2026 SwaarDhan. Built with ❤️ for Rural India.</div>
+      <div class="footer-hackathon">
+        <span data-key="footerHack">Smart AI Hackathon 1.0 | <span>PS-018</span> | Rademics Research Institute</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+// ========== TRANSLATIONS ==========
+const translations = {
+  hi: {
+    simpleMode: "सरल",
+    advancedMode: "विस्तृत",
+    badge: "स्मार्ट AI हैकाथॉन 1.0 — PS-018",
+    heroDevanagari: "स्वरधन — भारत का AI वित्तीय साथी",
+    heroLine1: "आपकी आवाज़,",
+    heroLine2: "आपका पैसा,",
+    heroLine3: "आपकी भाषा",
+    heroTagline: "हिंदी, तमिल, तेलुगु, बांग्ला या अंग्रेज़ी में बोलें। पैसे मैनेज करें, योजनाएं देखें, धोखाधड़ी पकड़ें — सिर्फ बोलकर।",
+    heroCta1: "अभी बोलना शुरू करें",
+    heroCta2: "सुविधाएं देखें",
+    micText: "बोलिए... अभी बोलें",
+    floatBadge1: "✓ बैलेंस अपडेट हुआ",
+    floatBadge2: "धोखाधड़ी रुकी",
+    floatBadge3: "KCC योग्य!",
+    stat1: "भारतीय भाषाएं",
+    stat2: "AI वर्कफ्लो",
+    stat3: "PM योजनाएं",
+    stat4: "धोखाधड़ी पैटर्न",
+    stat5: "AI उपलब्ध",
+    tryVoice: "यह कहकर देखें:",
+    vc1: '"मेरा बैलेंस बताओ"',
+    vc2: '"₹500 ट्रांसफर करो"',
+    vc3: '"मेरी स्टेटमेंट दिखाओ"',
+    vc4: '"PMJJBY के लिए योग्य हूं?"',
+    vc5: '"मेरे आखिरी 5 लेनदेन"',
+    featEyebrow: "SwaarDhan क्या कर सकता है",
+    featTitle: "आपका पूरा\nवित्तीय सहायक",
+    featDesc: "बैंकिंग, बीमा, लोन, धोखाधड़ी सुरक्षा — सब कुछ एक आवाज़-संचालित ऐप में।",
+    sf1t: "बैंकिंग", sf1d: "बैलेंस, ट्रांसफर, स्टेटमेंट, बिल",
+    sf2t: "बीमा", sf2d: "आपके परिवार के लिए PM योजनाएं",
+    sf3t: "लोन", sf3d: "KCC, MUDRA, SHG लोन",
+    sf4t: "धोखाधड़ी अलर्ट", sf4d: "घोटालों से सुरक्षा",
+    sf5t: "स्क्रीनशॉट मदद", sf5d: "AI किसी भी एरर को समझाता है",
+    sf6t: "बचत लक्ष्य", sf6d: "अपने सपनों के लिए बचाएं",
+    f1t: "स्मार्ट बैंकिंग", f1d: "बैलेंस देखें, पैसे भेजें, बिल भरें — अपनी भाषा में।",
+    f2t: "बीमा और योजनाएं", f2d: "5 PM योजनाओं की पात्रता तुरंत जांचें। PMJJBY, PMSBY, PMFBY, PMJAY और APY के लिए मार्गदर्शन।",
+    f3t: "लोन सलाहकार", f3d: "EMI गणना, लोन पात्रता, साहूकारों से मुक्ति, KCC मार्गदर्शन।",
+    f4t: "स्क्रीनशॉट समझाने वाला", f4d: "किसी भी बैंकिंग एरर की फोटो लें। AI सरल भाषा में समझाता है।",
+    f5t: "धोखाधड़ी शील्ड", f5d: "15+ धोखाधड़ी पैटर्न पकड़ता है। OTP, फर्जी बैंक कॉल, KYC स्कैम।",
+    f6t: "साप्ताहिक सारांश", f6d: "हर सोमवार 9 बजे Telegram और Gmail पर वित्तीय सारांश।",
+    howEyebrow: "सरल प्रक्रिया",
+    howTitle: "SwaarDhan कैसे काम करता है",
+    howDesc: "चार आसान चरण — बोलने से जवाब पाने तक।",
+    step1t: "आप बोलते हैं", step1d: "हिंदी, तमिल, तेलुगु, बांग्ला या अंग्रेज़ी में कुछ भी कहें।",
+    step2t: "AI समझता है", step2d: "Groq AI तुरंत आपका इरादा समझता है।",
+    step3t: "काम होता है", step3d: "n8n वर्कफ्लो सुरक्षित रूप से आपके बैंक से जुड़ता है।",
+    step4t: "आप सुनते हैं", step4d: "AI आपकी भाषा में स्पष्ट जवाब देता है।",
+    schEyebrow: "सरकारी योजनाएं",
+    schTitle: "PM योजनाएं आसान हुईं",
+    schDesc: "SwaarDhan स्वतः जांचता है कि आप कौन सी सरकारी योजनाओं के लिए योग्य हैं।",
+    sch_premium: "वार्षिक प्रीमियम",
+    sch_cover: "जीवन बीमा",
+    sch_age: "आयु",
+    sch_need: "जरूरत",
+    sch_ai: "AI पात्रता जांचता है",
+    schCheckTitle: "अपनी पात्रता जांचें",
+    schCheckDesc: 'बस कहें "मुझे कौन सी scheme मिलेगी?" — SwaarDhan सभी 5 योजनाएं तुरंत जांचता है।',
+    schCheckBtn: "अभी जांचें 🎙️",
+    secEyebrow: "बैंक-स्तरीय सुरक्षा",
+    secTitle: "आपका पैसा सुरक्षित है",
+    secDesc: "प्रमुख भारतीय बैंकों जैसे सुरक्षा मानकों के साथ बनाया गया।",
+    tr1t: "bcrypt PIN एन्क्रिप्शन", tr1d: "आपका PIN bcrypt से हैश होता है। हम कभी आपका असली PIN नहीं देखते।",
+    tr2t: "रियल-टाइम धोखाधड़ी पहचान", tr2d: "हर लेनदेन 15+ धोखाधड़ी पैटर्न जांचता है।",
+    tr3t: "RBI अनुपालित", tr3d: "सभी डेटा ऑपरेशन RBI मानदंडों का पालन करते हैं।",
+    tr4t: "256-bit SSL एन्क्रिप्शन", tr4d: "सभी API कॉल TLS 1.3 के साथ एन्क्रिप्टेड हैं।",
+    trustUptime: "Supabase के साथ अपटाइम",
+    tc1: "PIN कभी plaintext में नहीं", tc2: "Atomic लेनदेन", tc3: "धोखाधड़ी ट्रांसफर से पहले रोकी जाती है",
+    tc4: "दो-चरण ट्रांसफर", tc5: "Vision AI से स्क्रीनशॉट धोखाधड़ी पकड़ी जाती है",
+    tc6: "RBI हेल्पलाइन 14440 हमेशा उपलब्ध",
+    ctaTitle: "SwaarDhan आज़माएं?",
+    ctaDesc: "भारत के लिए बनाया। आपकी भाषा में बोलता है। आपका पैसा सुरक्षित रखता है। 24/7 उपलब्ध।",
+    ctaBtn1: "अभी बोलना शुरू करें",
+    ctaBtn2: "GitHub पर देखें →",
+    ctaBadge1: "स्मार्ट AI हैकाथॉन 1.0",
+    ctaBadge2: "भारत के लिए बनाया",
+    ctaBadge3: "Groq AI से संचालित",
+    ctaBadge4: "PS-018 | Rademics",
+    footerTagline: "स्वरधन — भारत का आवाज़-प्रथम AI वित्तीय साथी। ग्रामीण भारत को उनकी अपनी भाषा में सुरक्षित वित्त प्रबंधन में मदद करता है।",
+    footCol1: "सुविधाएं", footCol2: "तकनीक", footCol3: "मदद",
+    foot1: "बैंकिंग सहायक", foot2: "PM योजनाएं", foot3: "लोन सलाह", foot4: "धोखाधड़ी शील्ड", foot5: "साप्ताहिक सारांश",
+    fh1: "कैसे काम करता है", fh2: "सुरक्षा",
+    footerCopy: "© 2026 SwaarDhan. ग्रामीण भारत के लिए ❤️ से बनाया।",
+    footerHack: "Smart AI Hackathon 1.0 | PS-018 | Rademics Research Institute",
+    navFeatures: "सुविधाएं", navHow: "कैसे काम करता है", navSchemes: "PM योजनाएं", navSecurity: "सुरक्षा", navStart: "शुरू करें →"
+  },
+  en: {
+    simpleMode: "Simple",
+    advancedMode: "Advanced",
+    badge: "Smart AI Hackathon 1.0 — PS-018",
+    heroDevanagari: "SwaarDhan — India's AI Financial Companion",
+    heroLine1: "Your Voice,",
+    heroLine2: "Your Money,",
+    heroLine3: "Your Language",
+    heroTagline: "Speak in Hindi, Tamil, Telugu, Bengali or English. Manage money, check schemes, detect fraud — all by just talking.",
+    heroCta1: "Start Talking Now",
+    heroCta2: "See Features",
+    micText: "Speak now...",
+    floatBadge1: "✓ Balance Updated",
+    floatBadge2: "Fraud Blocked",
+    floatBadge3: "KCC Eligible!",
+    stat1: "Indian Languages", stat2: "AI Workflows", stat3: "PM Schemes Covered", stat4: "Fraud Patterns", stat5: "AI Available",
+    tryVoice: "Try saying:",
+    vc1: '"Check my balance"',
+    vc2: '"Transfer ₹500"',
+    vc3: '"Show my statement"',
+    vc4: '"Am I eligible for PMJJBY?"',
+    vc5: '"My last 5 transactions"',
+    featEyebrow: "What SwaarDhan Can Do",
+    featTitle: "Your Complete\nFinancial Assistant",
+    featDesc: "Banking, insurance, loans, fraud protection — all in one voice-powered app.",
+    sf1t: "Banking", sf1d: "Balance, Transfer, Statement, Bills",
+    sf2t: "Insurance", sf2d: "PM Schemes for your family",
+    sf3t: "Loans", sf3d: "KCC, MUDRA, SHG Loans",
+    sf4t: "Fraud Alert", sf4d: "Protect from scams & fraud",
+    sf5t: "Screenshot Help", sf5d: "AI explains any error for you",
+    sf6t: "Savings Goal", sf6d: "Save for your dreams",
+    f1t: "Smart Banking", f1d: "Check balance, transfer funds with PIN, view statements, pay bills — all via voice in your language.",
+    f2t: "Insurance & Schemes", f2d: "Instantly check eligibility for all 5 PM schemes. Step-by-step enrollment for PMJJBY, PMSBY, PMFBY, PMJAY & APY.",
+    f3t: "Loan Advisory", f3d: "EMI calculations, loan eligibility, escape plans from moneylenders, Kisan Credit Card guidance.",
+    f4t: "Screenshot Explainer", f4d: "Photo any banking error. Groq Vision AI explains in simple language with step-by-step solutions.",
+    f5t: "Fraud Shield", f5d: "Detects 15+ fraud patterns including OTP harvesting, fake bank calls, KYC scams, lottery fraud.",
+    f6t: "Weekly Digest", f6d: "Every Monday 9AM — personalized financial digest on Telegram & email.",
+    howEyebrow: "Simple Process", howTitle: "How SwaarDhan Works",
+    howDesc: "Four easy steps from speaking your request to getting a helpful answer.",
+    step1t: "You Speak", step1d: "Say anything in Hindi, Tamil, Telugu, Bengali or English. No typing needed.",
+    step2t: "AI Understands", step2d: "Groq AI instantly understands your intent and routes to the right workflow.",
+    step3t: "Action Happens", step3d: "n8n workflows securely connect to your bank via Supabase.",
+    step4t: "You Hear Result", step4d: "AI responds in your language with a clear voice answer.",
+    schEyebrow: "Government Schemes", schTitle: "PM Schemes Made Simple",
+    schDesc: "SwaarDhan automatically checks which government schemes you qualify for.",
+    sch_premium: "Annual Premium", sch_cover: "Life Cover", sch_age: "Age", sch_need: "Required",
+    sch_ai: "AI checks eligibility",
+    schCheckTitle: "Check Your Eligibility",
+    schCheckDesc: 'Just say "Which schemes am I eligible for?" — SwaarDhan checks all 5 instantly.',
+    schCheckBtn: "Check Now 🎙️",
+    secEyebrow: "Bank-Grade Security", secTitle: "Your Money is Safe",
+    secDesc: "Built with the same security standards as major Indian banks.",
+    tr1t: "bcrypt PIN Encryption", tr1d: "Your PIN is hashed using bcrypt. We never see your actual PIN.",
+    tr2t: "Real-Time Fraud Detection", tr2d: "Every transaction checks 15+ fraud patterns before processing.",
+    tr3t: "RBI Compliant", tr3d: "All data operations follow RBI data localization norms.",
+    tr4t: "256-bit SSL Encryption", tr4d: "All API calls are encrypted end-to-end with TLS 1.3.",
+    trustUptime: "Uptime with Supabase Free Tier",
+    tc1: "PIN never stored in plaintext", tc2: "Atomic transactions — no partial debits",
+    tc3: "Fraud blocked before transfer", tc4: "Two-step transfer confirmation",
+    tc5: "Screenshot fraud auto-detected by Vision AI", tc6: "RBI helpline 14440 always provided",
+    ctaTitle: "Ready to try SwaarDhan?",
+    ctaDesc: "Built for Bharat. Speaks your language. Protects your money. Available 24/7.",
+    ctaBtn1: "Start Talking Now", ctaBtn2: "View on GitHub →",
+    ctaBadge1: "Smart AI Hackathon 1.0", ctaBadge2: "Made for Bharat",
+    ctaBadge3: "Powered by Groq AI", ctaBadge4: "PS-018 | Rademics",
+    footerTagline: "SwaarDhan — India's voice-first AI financial companion. Helping rural India manage money safely, in their own language.",
+    footCol1: "Features", footCol2: "Technology", footCol3: "Help",
+    foot1: "Banking Assistant", foot2: "PM Schemes", foot3: "Loan Advisory", foot4: "Fraud Shield", foot5: "Weekly Digest",
+    fh1: "How it Works", fh2: "Security",
+    footerCopy: "© 2026 SwaarDhan. Built with ❤️ for Rural India.",
+    footerHack: "Smart AI Hackathon 1.0 | PS-018 | Rademics Research Institute",
+    navFeatures: "Features", navHow: "How it Works", navSchemes: "PM Schemes", navSecurity: "Security", navStart: "Get Started →"
+  },
+  ta: {
+    simpleMode: "எளிமை",
+    advancedMode: "விரிவான",
+    heroDevanagari: "ஸ்வார்தன் — பாரதத்தின் AI நிதி தோழர்",
+    heroLine1: "உங்கள் குரல்,",
+    heroLine2: "உங்கள் பணம்,",
+    heroLine3: "உங்கள் மொழி",
+    heroTagline: "தமிழ், இந்தி, தெலுங்கு, வங்காளம் அல்லது ஆங்கிலத்தில் பேசுங்கள். பணத்தை நிர்வகிக்கவும், திட்டங்களை சரிபார்க்கவும்.",
+    heroCta1: "இப்போது பேசத் தொடங்குங்கள்",
+    heroCta2: "அம்சங்களைப் பாருங்கள்",
+    micText: "பேசுங்கள்...",
+    tryVoice: "இதை சொல்லுங்கள்:",
+    vc1: '"என் balance என்ன?"',
+    vc2: '"₹500 transfer பண்ணு"',
+    vc3: '"என் statement காட்டு"',
+    vc4: '"PMJJBY-க்கு தகுதியா?"',
+    vc5: '"கடைசி 5 transactions"',
+    featTitle: "உங்கள் முழு நிதி உதவியாளர்",
+    howTitle: "SwaarDhan எப்படி வேலை செய்கிறது",
+    schTitle: "PM திட்டங்கள் எளிமையாக்கப்பட்டன",
+    secTitle: "உங்கள் பணம் பாதுகாப்பாக உள்ளது",
+    ctaTitle: "SwaarDhan-ஐ முயற்சிக்க தயாரா?",
+    ctaBtn1: "இப்போது பேசத் தொடங்குங்கள்",
+    footerCopy: "© 2026 SwaarDhan. கிராமப்புற இந்தியாவுக்காக ❤️ உடன் கட்டப்பட்டது.",
+    navFeatures: "அம்சங்கள்", navHow: "எப்படி", navSchemes: "திட்டங்கள்", navSecurity: "பாதுகாப்பு", navStart: "தொடங்கு →"
+  },
+  te: {
+    simpleMode: "సులభం",
+    advancedMode: "వివరణాత్మక",
+    heroDevanagari: "స్వార్‌ధన్ — భారత్ యొక్క AI ఆర్థిక సహచరుడు",
+    heroLine1: "మీ స్వరం,",
+    heroLine2: "మీ డబ్బు,",
+    heroLine3: "మీ భాష",
+    heroTagline: "తెలుగు, హిందీ, తమిళం, బెంగాలీ లేదా ఇంగ్లీష్‌లో మాట్లాడండి. డబ్బు నిర్వహించండి, పథకాలు తనిఖీ చేయండి.",
+    heroCta1: "ఇప్పుడు మాట్లాడండి",
+    heroCta2: "ఫీచర్లు చూడండి",
+    micText: "మాట్లాడండి...",
+    tryVoice: "ఇలా చెప్పండి:",
+    vc1: '"నా balance చెప్పు"',
+    vc2: '"₹500 transfer చేయి"',
+    vc3: '"నా statement చూపించు"',
+    vc4: '"PMJJBY కోసం అర్హత?"',
+    vc5: '"చివరి 5 లావాదేవీలు"',
+    featTitle: "మీ పూర్తి ఆర్థిక సహాయకుడు",
+    howTitle: "SwaarDhan ఎలా పని చేస్తుంది",
+    schTitle: "PM పథకాలు సులభమయ్యాయి",
+    secTitle: "మీ డబ్బు సురక్షితం",
+    ctaTitle: "SwaarDhan ప్రయత్నించాలా?",
+    ctaBtn1: "ఇప్పుడు మాట్లాడండి",
+    footerCopy: "© 2026 SwaarDhan. గ్రామీణ భారతం కోసం ❤️ తో నిర్మించబడింది.",
+    navFeatures: "ఫీచర్లు", navHow: "ఎలా పని చేస్తుంది", navSchemes: "పథకాలు", navSecurity: "భద్రత", navStart: "ప్రారంభించు →"
+  },
+  bn: {
+    simpleMode: "সরল",
+    advancedMode: "বিস্তারিত",
+    heroDevanagari: "স্বারধন — ভারতের AI আর্থিক সঙ্গী",
+    heroLine1: "আপনার কণ্ঠ,",
+    heroLine2: "আপনার অর্থ,",
+    heroLine3: "আপনার ভাষা",
+    heroTagline: "বাংলা, হিন্দি, তামিল, তেলুগু বা ইংরেজিতে কথা বলুন। অর্থ পরিচালনা করুন, প্রকল্প পরীক্ষা করুন।",
+    heroCta1: "এখনই কথা বলুন",
+    heroCta2: "বৈশিষ্ট্য দেখুন",
+    micText: "বলুন...",
+    tryVoice: "এটি বলুন:",
+    vc1: '"আমার balance বলো"',
+    vc2: '"₹500 transfer করো"',
+    vc3: '"আমার statement দেখাও"',
+    vc4: '"PMJJBY-র জন্য যোগ্য?"',
+    vc5: '"শেষ ৫টি লেনদেন"',
+    featTitle: "আপনার সম্পূর্ণ আর্থিক সহকারী",
+    howTitle: "SwaarDhan কীভাবে কাজ করে",
+    schTitle: "PM প্রকল্প সহজ হলো",
+    secTitle: "আপনার অর্থ নিরাপদ",
+    ctaTitle: "SwaarDhan চেষ্টা করতে প্রস্তুত?",
+    ctaBtn1: "এখনই কথা বলুন",
+    footerCopy: "© 2026 SwaarDhan. গ্রামীণ ভারতের জন্য ❤️ দিয়ে তৈরি।",
+    navFeatures: "বৈশিষ্ট্য", navHow: "কীভাবে", navSchemes: "প্রকল্প", navSecurity: "নিরাপত্তা", navStart: "শুরু করুন →"
+  }
+};
+
+const langMeta = {
+  hi: { flag: '🇮🇳', name: 'हिन्दी' },
+  en: { flag: '🇬🇧', name: 'English' },
+  ta: { flag: '🇮🇳', name: 'தமிழ்' },
+  te: { flag: '🇮🇳', name: 'తెలుగు' },
+  bn: { flag: '🇮🇳', name: 'বাংলা' }
+};
+
+let currentLang = 'hi';
+let currentMode = 'simple';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.body.dataset.lang = lang;
+
+  // Update button
+  document.getElementById('currentFlag').textContent = langMeta[lang].flag;
+  document.getElementById('currentLang').textContent = langMeta[lang].name;
+
+  // Highlight active
+  document.querySelectorAll('.lang-option').forEach(el => el.classList.remove('active'));
+  event && event.target.classList.add('active');
+
+  // Apply translations
+  const t = { ...translations.en, ...translations[lang] };
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  closeLangMenu();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  const body = document.body;
+  const simpleBtn = document.getElementById('simpleBtn');
+  const advancedBtn = document.getElementById('advancedBtn');
+
+  if (mode === 'simple') {
+    body.classList.add('simple-mode');
+    simpleBtn.classList.add('active');
+    advancedBtn.classList.remove('active');
+  } else {
+    body.classList.remove('simple-mode');
+    advancedBtn.classList.add('active');
+    simpleBtn.classList.remove('active');
+  }
+
+  // Animate the transition
+  body.style.transition = 'all 0.4s ease';
+}
+
+function toggleLangMenu() {
+  document.getElementById('langDropdown').classList.toggle('open');
+}
+
+function closeLangMenu() {
+  document.getElementById('langDropdown').classList.remove('open');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.lang-selector')) closeLangMenu();
+});
+
+// ========== SCROLL REVEAL ==========
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ========== ANIMATED COUNTER ==========
+function animateCounter(el, target, suffix = '') {
+  let start = 0;
+  const duration = 1500;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) {
+      start = target;
+      clearInterval(timer);
+    }
+    el.textContent = Math.floor(start) + suffix;
+  }, 16);
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const nums = [
+        { el: document.querySelectorAll('.stat-number')[0], val: 5, suffix: '' },
+        { el: document.querySelectorAll('.stat-number')[1], val: 8, suffix: '' },
+        { el: document.querySelectorAll('.stat-number')[2], val: 5, suffix: '' },
+        { el: document.querySelectorAll('.stat-number')[3], val: 15, suffix: '+' },
+      ];
+      nums.forEach(n => { if (n.el) animateCounter(n.el, n.val, n.suffix); });
+      statsObserver.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+
+const statsBar = document.querySelector('.stats-bar');
+if (statsBar) statsObserver.observe(statsBar);
+
+// ========== SMOOTH NAV ==========
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// ========== VOICE CHIP INTERACTION ==========
+document.querySelectorAll('.voice-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    this.style.background = 'rgba(29,233,155,0.35)';
+    this.style.transform = 'scale(0.96)';
+    setTimeout(() => {
+      this.style.background = '';
+      this.style.transform = '';
+    }, 300);
+  });
+});
+
+// ========== NAVBAR SHADOW ON SCROLL ==========
+window.addEventListener('scroll', () => {
+  const navbar = document.querySelector('.navbar');
+  if (navbar) {
+    if (window.scrollY > 50) {
+      navbar.style.boxShadow = '0 4px 20px rgba(10,61,46,0.15)';
+    } else {
+      navbar.style.boxShadow = 'none';
+    }
+  }
+});
+
+// Initialize with Hindi
+document.addEventListener('DOMContentLoaded', () => {
+  setLang('hi');
+});
+</script>
+</body>
+</html>
