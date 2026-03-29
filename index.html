@@ -277,7 +277,7 @@
             transition: background 0.3s, box-shadow 0.3s;
         }
 
-        /* Chat */
+        /* Chat Area */
         .chat-area {
             width: 100%; max-width: 620px; display: flex; flex-direction: column;
             gap: 18px; margin-top: 30px; flex-grow: 1; padding-bottom: 20px;
@@ -313,7 +313,7 @@
         .scheme-chip { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); margin: 4px 4px 0 0; color: var(--cyan); }
 
         /* ─── Orb / Mic ─── */
-        .orb-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; margin-top: auto; padding: 20px 0 10px; flex-shrink: 0; }
+        .orb-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; margin-top: auto; padding: 20px 0 0px; flex-shrink: 0; width: 100%; }
         .orb-container { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
         .orb-aura {
             position: absolute; inset: -20px; border-radius: 50%;
@@ -341,6 +341,35 @@
         .ticker { height: 20px; overflow: hidden; margin-top: 8px; }
         .ticker-track { transition: transform 0.5s var(--smooth); }
         .ticker-item { height: 20px; font-size: 13px; font-weight: 500; color: var(--muted); text-align: center; display: flex; align-items: center; justify-content: center; }
+
+        /* ─── Chat Input ─── */
+        .chat-input-container {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 580px;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--rim);
+            border-radius: 30px; padding: 6px 6px 6px 20px;
+            margin: 0 auto 16px;
+            transition: all 0.3s var(--spring);
+            backdrop-filter: blur(10px);
+        }
+        .chat-input-container:focus-within {
+            border-color: rgba(6, 182, 212, 0.5); background: rgba(6, 182, 212, 0.05);
+            box-shadow: 0 8px 32px rgba(6, 182, 212, 0.15);
+        }
+        .chat-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: var(--text); font-size: 15px; font-family: inherit; font-weight: 500;
+        }
+        .chat-input::placeholder { color: var(--faint); font-weight: 500; }
+        .chat-send-btn {
+            width: 40px; height: 40px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, var(--electric), var(--cyan));
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.2s var(--spring); flex-shrink: 0;
+        }
+        .chat-send-btn:hover { transform: scale(1.08); box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
+        .chat-send-btn:active { transform: scale(0.95); }
+        .chat-send-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; }
 
         /* Suggestions */
         .sug-row {
@@ -604,7 +633,7 @@
             .vault-card, .fraud-widget, .cibil-card, .srv-grid { margin-left: 16px; margin-right: 16px; }
             .r-content { padding-bottom: 24px; }
             .chat-area { padding: 0 16px 20px; }
-            .orb-wrapper { padding: 20px 0; }
+            .orb-wrapper { padding: 20px 0 0; }
         }
 
         .no-msgs {
@@ -793,6 +822,14 @@
             </div>
         </div>
 
+        <!-- NEW CHAT INPUT BOX -->
+        <div class="chat-input-container">
+            <input type="text" id="chatInput" class="chat-input" data-i18n-placeholder="typeMessage" placeholder="Type your message..." onkeypress="handleChatEnter(event)">
+            <button class="chat-send-btn" onclick="sendChatMessage()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+
         <div class="sug-row" id="sugRow"></div>
     </section>
 
@@ -833,6 +870,8 @@
                 </div>
             </div>
 
+            <!-- EXTRACTED VAULT FEATURES -->
+            
             <!-- Expense Tracker -->
             <div class="vault-card expense" onclick="openModal('expenseModal')">
                 <div class="v-hdr">
@@ -1178,7 +1217,8 @@ const I18N = {
         mlDesc: "Paying 48–72% interest? Find formal credit alternatives and save thousands annually.", calcSave: "Calculate Savings",
         fraudShield: "Fraud Shield — This Month", digest: "Weekly Digest", sentWa: "Sent via WhatsApp",
         scanAndPay: "📷 Scan & Pay", alignQr: "Align QR code within the frame", orUpi: "OR ENTER UPI ID",
-        verifyPay: "Verify & Pay →", suspiciousMsg: "Suspicious QR or Message?", uploadVision: "Upload to AI Vision"
+        verifyPay: "Verify & Pay →", suspiciousMsg: "Suspicious QR or Message?", uploadVision: "Upload to AI Vision",
+        typeMessage: "Type your message..."
     },
     hi: {
         gTimeM: "सुप्रभात", gTimeA: "शुभ दोपहर", gTimeE: "शुभ संध्या",
@@ -1192,7 +1232,8 @@ const I18N = {
         mlDesc: "क्या आप 48-72% ब्याज दे रहे हैं? औपचारिक ऋण विकल्प खोजें और हर साल हजारों बचाएं।", calcSave: "बचत की गणना करें",
         fraudShield: "फ्रॉड शील्ड — इस महीने", digest: "साप्ताहिक सारांश", sentWa: "WhatsApp के माध्यम से भेजा गया",
         scanAndPay: "📷 स्कैन और पे", alignQr: "QR कोड को फ्रेम में रखें", orUpi: "या UPI ID दर्ज करें",
-        verifyPay: "सत्यापित करें और पे करें →", suspiciousMsg: "संदिग्ध QR या संदेश?", uploadVision: "AI विज़न पर अपलोड करें"
+        verifyPay: "सत्यापित करें और पे करें →", suspiciousMsg: "संदिग्ध QR या संदेश?", uploadVision: "AI विज़न पर अपलोड करें",
+        typeMessage: "अपना संदेश यहाँ लिखें..."
     },
     ta: {
         gTimeM: "காலை வணக்கம்", gTimeA: "மதிய வணக்கம்", gTimeE: "மாலை வணக்கம்",
@@ -1206,7 +1247,8 @@ const I18N = {
         mlDesc: "48-72% வட்டி செலுத்துகிறீர்களா? முறையான கடன் மாற்று வழிகளைக் கண்டறிந்து ஆயிரக்கணக்கானவற்றை சேமிக்கவும்.", calcSave: "சேமிப்பை கணக்கிடுங்கள்",
         fraudShield: "மோசடி பாதுகாப்பு — இந்த மாதம்", digest: "வாராந்திர சுருக்கம்", sentWa: "WhatsApp மூலம் அனுப்பப்பட்டது",
         scanAndPay: "📷 ஸ்கேன் & பே", alignQr: "QR குறியீட்டை சட்டத்திற்குள் வைக்கவும்", orUpi: "அல்லது UPI ID ஐ உள்ளிடவும்",
-        verifyPay: "சரிபார்த்து செலுத்து →", suspiciousMsg: "சந்தேகத்திற்குரிய QR அல்லது செய்தியா?", uploadVision: "AI விஷனுக்கு பதிவேற்றவும்"
+        verifyPay: "சரிபார்த்து செலுத்து →", suspiciousMsg: "சந்தேகத்திற்குரிய QR அல்லது செய்தியா?", uploadVision: "AI விஷனுக்கு பதிவேற்றவும்",
+        typeMessage: "உங்கள் செய்தியை தட்டச்சு செய்க..."
     },
     te: {
         gTimeM: "శుభోదయం", gTimeA: "శుభ మధ్యాహ్నం", gTimeE: "శుభ సాయంత్రం",
@@ -1220,7 +1262,8 @@ const I18N = {
         mlDesc: "48-72% వడ్డీ చెల్లిస్తున్నారా? అధికారిక క్రెడిట్ ప్రత్యామ్నాయాలను కనుగొనండి మరియు ఆదా చేయండి.", calcSave: "పొదుపును లెక్కించండి",
         fraudShield: "ఫ్రాడ్ షీల్డ్ — ఈ నెల", digest: "వారపు డైజెస్ట్", sentWa: "WhatsApp ద్వారా పంపబడింది",
         scanAndPay: "📷 స్కాన్ & పే", alignQr: "ఫ్రేమ్‌లో QR కోడ్‌ను ఉంచండి", orUpi: "లేదా UPI ID నమోదు చేయండి",
-        verifyPay: "ధృవీకరించి చెల్లించండి →", suspiciousMsg: "అనుమానాస్పద QR లేదా సందేశమా?", uploadVision: "AI విజన్‌కు అప్‌లోడ్ చేయండి"
+        verifyPay: "ధృవీకరించి చెల్లించండి →", suspiciousMsg: "అనుమానాస్పద QR లేదా సందేశమా?", uploadVision: "AI విజన్‌కు అప్‌లోడ్ చేయండి",
+        typeMessage: "మీ సందేశాన్ని టైప్ చేయండి..."
     },
     bn: {
         gTimeM: "সুপ্ৰভাত", gTimeA: "শুভ অপরাহ্ন", gTimeE: "শুভ সন্ধ্যা",
@@ -1234,7 +1277,8 @@ const I18N = {
         mlDesc: "আপনি কি ৪৮-৭২% সুদ দিচ্ছেন? আনুষ্ঠানিক ক্রেডিট বিকল্প খুঁজুন এবং হাজার হাজার সঞ্চয় করুন।", calcSave: "সঞ্চয় গণনা করুন",
         fraudShield: "ফ্রড শিল্ড — এই মাসে", digest: "সাপ্তাহিক ডাইজেস্ট", sentWa: "WhatsApp-এর মাধ্যমে পাঠানো হয়েছে",
         scanAndPay: "📷 স্ক্যান এবং পে", alignQr: "ফ্রেমের মধ্যে QR কোড রাখুন", orUpi: "অথবা UPI ID লিখুন",
-        verifyPay: "যাচাই করুন এবং পে করুন →", suspiciousMsg: "সন্দেহজনক QR বা মেসেজ?", uploadVision: "AI ভিশনে আপলোড করুন"
+        verifyPay: "যাচাই করুন এবং পে করুন →", suspiciousMsg: "সন্দেহজনক QR বা মেসেজ?", uploadVision: "AI ভিশনে আপলোড করুন",
+        typeMessage: "আপনার মেসেজ টাইপ করুন..."
     },
     or: {
         gTimeM: "ସୁପ୍ରଭାତ", gTimeA: "ଶୁଭ ଅପରାହ୍ନ", gTimeE: "ଶୁଭ ସନ୍ଧ୍ୟା",
@@ -1248,7 +1292,8 @@ const I18N = {
         mlDesc: "ଆପଣ ୪୮-୭୨% ସୁଧ ଦେଉଛନ୍ତି କି? ଆନୁଷ୍ଠାନିକ କ୍ରେଡିଟ୍ ବିକଳ୍ପ ଖୋଜନ୍ତୁ ଏବଂ ହଜାର ହଜାର ସଞ୍ଚୟ କରନ୍ତୁ।", calcSave: "ସଞ୍ଚୟ ଗଣନା କରନ୍ତୁ",
         fraudShield: "ଫ୍ରଡ୍ ସିଲ୍ଡ — ଏହି ମାସରେ", digest: "ସାପ୍ତାହିକ ଡାଇଜେଷ୍ଟ", sentWa: "WhatsApp ମାଧ୍ୟମରେ ପଠାଯାଇଛି",
         scanAndPay: "📷 ସ୍କାନ୍ ଏବଂ ପେ", alignQr: "ଫ୍ରେମ୍ ମଧ୍ୟରେ QR କୋଡ୍ ରଖନ୍ତୁ", orUpi: "କିମ୍ବା UPI ID ଲେଖନ୍ତୁ",
-        verifyPay: "ଯାଞ୍ଚ କରନ୍ତୁ ଏବଂ ପେ କରନ୍ତୁ →", suspiciousMsg: "ସନ୍ଦେହଜନକ QR କିମ୍ବା ମେସେଜ୍?", uploadVision: "AI ଭିଜନ୍‌କୁ ଅପଲୋଡ୍ କରନ୍ତୁ"
+        verifyPay: "ଯାଞ୍ଚ କରନ୍ତୁ ଏବଂ ପେ କରନ୍ତୁ →", suspiciousMsg: "ସନ୍ଦେହଜନକ QR କିମ୍ବା ମେସେଜ୍?", uploadVision: "AI ଭିଜନ୍‌କୁ ଅପଲୋଡ୍ କରନ୍ତୁ",
+        typeMessage: "ଆପଣଙ୍କ ମେସେଜ୍ ଟାଇପ୍ କରନ୍ତୁ..."
     }
 };
 
@@ -1371,6 +1416,10 @@ function updateLangUI() {
         const key = el.getAttribute('data-i18n');
         if(dict[key]) el.innerHTML = dict[key];
     });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if(dict[key]) el.setAttribute('placeholder', dict[key]);
+    });
 }
 
 function cycleLang() {
@@ -1489,7 +1538,7 @@ async function checkBackend() {
 }
 
 // ══════════════════════════════════════════════════════
-// VOICE PIPELINE
+// VOICE & CHAT PIPELINE
 // ══════════════════════════════════════════════════════
 function toggleMic() { S.mic === 'listening' ? stopMic() : startMic(); }
 
@@ -1513,6 +1562,18 @@ function startMic() {
 }
 
 function stopMic() { if (S.rec) S.rec.stop(); }
+
+function handleChatEnter(e) {
+    if (e.key === 'Enter') sendChatMessage();
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    doSample(text);
+}
 
 async function process(text) {
     setMic('processing'); showTyping(); setPipe('AI Processing…', 'var(--purple)');
@@ -1704,7 +1765,6 @@ function resetScanModal() {
 function initScanPay() {
     let to = document.getElementById('scanUpiId').value.trim();
     if (!to) {
-        // Simulate a successful QR scan for the demo
         to = "merchant@upi";
         showToast('✅', 'QR Code Scanned');
     }
@@ -1999,7 +2059,7 @@ function showToast(ico, txt) {
     const el = document.getElementById('toast');
     el.classList.add('show');
     clearTimeout(S.toastTimer);
-    S.toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+    S.toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
 }
 
 </script>
