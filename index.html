@@ -1189,10 +1189,9 @@
 // ══════════════════════════════════════════════════════
 
 const BACKEND = 'http://localhost:5678/webhook';
-// Change this to your n8n Cloud URL in production:
-// const BACKEND = 'https://your-n8n-instance.app.n8n.cloud/webhook';
 
-const TIMEOUT_MS = 6000;
+// INCREASED TIMEOUT: Audio generation + Whisper takes longer!
+const TIMEOUT_MS = 15000; 
 const USER_ID = 'U_RAMESH_001';
 
 const LANGS = [
@@ -1353,7 +1352,7 @@ const FALLBACKS = {
 // STATE
 // ══════════════════════════════════════════════════════
 const S = {
-    lIdx: 0, mic: 'idle', rec: null,
+    lIdx: 0, mic: 'idle', rec: null, mediaRecorder: null, audioChunks: [],
     bal: 24500, balVisible: true,
     backendOnline: false, imgBase64: null, imgType: null,
     tickIdx: 0, toastTimer: null,
@@ -1538,31 +1537,114 @@ async function checkBackend() {
 }
 
 // ══════════════════════════════════════════════════════
-// VOICE & CHAT PIPELINE
+// VOICE AUDIO RECORDING (MediaRecorder API)
 // ══════════════════════════════════════════════════════
 function toggleMic() { S.mic === 'listening' ? stopMic() : startMic(); }
 
-function startMic() {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { showToast('⚠️', 'Voice not supported on this browser. Try Chrome.'); return; }
-    hideNoMsgs();
-    S.rec = new SR();
-    S.rec.lang = LANGS[S.lIdx].locale;
-    S.rec.continuous = false; S.rec.interimResults = false;
-    setMic('listening');
-    showUserBubble('...');
-    S.rec.onresult = e => { showUserBubble(e.results[0][0].transcript); };
-    S.rec.onerror = e => { setMic('idle'); showToast('⚠️', 'Voice error: ' + e.error); };
-    S.rec.onend = () => {
-        const t = document.getElementById('userLastText');
-        if (t && t.textContent && t.textContent !== '...') process(t.textContent);
-        else setMic('idle');
-    };
-    S.rec.start();
+async function startMic() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        hideNoMsgs();
+        setMic('listening');
+        setPipe('Listening...', 'var(--cyan)');
+        showUserBubble('🎙️ Recording...'); 
+        
+        S.audioChunks = [];
+        S.mediaRecorder = new MediaRecorder(stream);
+        
+        S.mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) S.audioChunks.push(e.data);
+        };
+        
+        S.mediaRecorder.onstop = async () => {
+            stream.getTracks().forEach(track => track.stop());
+            const audioBlob = new Blob(S.audioChunks, { type: 'audio/webm' });
+            await sendAudioToN8n(audioBlob);
+        };
+        
+        S.mediaRecorder.start();
+        
+    } catch (err) {
+        console.error('Mic access error:', err);
+        showToast('⚠️', 'Microphone access denied.');
+        setMic('idle');
+    }
 }
 
-function stopMic() { if (S.rec) S.rec.stop(); }
+function stopMic() {
+    if (S.mediaRecorder && S.mediaRecorder.state !== 'inactive') {
+        S.mediaRecorder.stop(); 
+        setMic('processing');
+        setPipe('Uploading Audio...', 'var(--purple)');
+    }
+}
 
+// Upload Audio Blob to localhost Webhook
+async function sendAudioToN8n(audioBlob) {
+    showTyping();
+    const lang = LANGS[S.lIdx].code;
+    
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'voice_query.webm');
+    formData.append('language', lang);
+    formData.append('user_id', USER_ID);
+
+    try {
+        const r = await Promise.race([
+            fetch(`${BACKEND}/voice-query`, {
+                method: 'POST',
+                body: formData 
+            }),
+            new Promise((_, rj) => setTimeout(() => rj(new Error('timeout')), TIMEOUT_MS))
+        ]);
+
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+
+        // Check if n8n replied with binary audio
+        const contentType = r.headers.get('content-type');
+        if (contentType && (contentType.includes('audio') || contentType.includes('mpeg') || contentType.includes('octet-stream'))) {
+            
+            const resBlob = await r.blob();
+            const url = window.URL.createObjectURL(resBlob);
+            const audio = new Audio(url);
+            audio.play();
+
+            hideTyping();
+            setMic('idle');
+            setPipe('AI Replied', 'var(--green)');
+            showAIBubble('🎵 Dhan-Mitra sent a voice response.', 'UNKNOWN', {});
+            
+            document.getElementById('userLastText').textContent = '🎤 Audio Sent';
+            return;
+        }
+
+        // If n8n returns standard JSON
+        const d = await r.json();
+        document.getElementById('userLastText').textContent = d.transcript || '🎤 Audio Sent';
+
+        if (d.intent === 'FUND_TRANSFER') {
+            hideTyping(); setMic('idle');
+            const amt = d.slots?.amount || 500;
+            const to = d.slots?.recipient || 'Rajesh';
+            promptPin(amt, to, '');
+            return;
+        }
+
+        const reply = d.response_text || d.response || "Task completed.";
+        deliver(reply, d.intent, d);
+
+    } catch (e) {
+        console.error('Audio processing failed:', e);
+        hideTyping();
+        setMic('idle');
+        setPipe('Error', 'var(--red)');
+        showToast('❌', 'Failed to reach AI. Trying local fallback...');
+        document.getElementById('userLastText').textContent = '⚠️ Processing Failed';
+    }
+}
+
+// For Typed Input
 function handleChatEnter(e) {
     if (e.key === 'Enter') sendChatMessage();
 }
@@ -1575,11 +1657,12 @@ function sendChatMessage() {
     doSample(text);
 }
 
+// Unified processor for typed text
 async function process(text) {
     setMic('processing'); showTyping(); setPipe('AI Processing…', 'var(--purple)');
     const lang = LANGS[S.lIdx].code;
     
-    // Check if it's a transfer intent locally immediately to bypass standard delivery
+    // Check if it's a transfer intent locally immediately
     const fakeIntent = detectIntent(text, lang);
     if (fakeIntent === 'FUND_TRANSFER') {
         hideTyping();
@@ -1600,7 +1683,37 @@ async function process(text) {
             }),
             new Promise((_, rj) => setTimeout(() => rj(new Error('timeout')), TIMEOUT_MS))
         ]);
+        
         if (!r.ok) throw new Error('HTTP ' + r.status);
+        
+        // Check for audio response
+        const contentType = r.headers.get('content-type');
+        if (contentType && (contentType.includes('audio') || contentType.includes('mpeg') || contentType.includes('octet-stream'))) {
+            
+            const blob = await r.blob();
+            const url = window.URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `SwaarDhan_Voice_${Date.now()}.mp3`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+
+            const audio = new Audio(url);
+            audio.play();
+
+            hideTyping();
+            setMic('idle');
+            setPipe('Audio Received', 'var(--green)');
+            showAIBubble('🎵 Audio generated and played successfully.', 'UNKNOWN', {});
+            return; 
+        }
+
         const d = await r.json();
         
         if (d.intent === 'FUND_TRANSFER') {
