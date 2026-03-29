@@ -62,6 +62,33 @@
         * { scrollbar-width: none; }
         *::-webkit-scrollbar { display: none; }
 
+        /* ─── Splash Screen ─── */
+        .splash { position: fixed; inset: 0; background: var(--bg); background-image: var(--bg-grad); z-index: 999999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s; padding: 20px;}
+        .splash-card { background: rgba(11, 17, 32, 0.85); backdrop-filter: blur(24px); border: 1px solid var(--rim-blue); border-radius: var(--r-xl); padding: 40px 32px; text-align: center; max-width: 500px; width: 100%; box-shadow: 0 40px 100px rgba(0,0,0,0.9); animation: splashPop 0.6s var(--spring); }
+        @keyframes splashPop { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .splash-title { font-size: 26px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+        .splash-title span { color: var(--cyan); }
+        .splash-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
+        .splash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; }
+        .lang-card { background: rgba(255,255,255,0.04); border: 1px solid var(--rim); border-radius: var(--r-md); padding: 18px; cursor: pointer; transition: all 0.3s var(--spring); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .lang-card:hover { background: rgba(59,130,246,0.15); border-color: var(--cyan); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(6,182,212,0.2); }
+        .lang-card span { font-size: 16px; font-weight: 700; color: var(--text); }
+        .lang-card small { font-size: 11px; color: var(--muted); font-family: 'Noto Sans Devanagari', sans-serif; }
+
+        /* ─── Notifications ─── */
+        .notif-btn { position: relative; width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid var(--rim); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; color: var(--text); }
+        .notif-btn:hover { background: rgba(6,182,212,0.1); border-color: var(--cyan); color: var(--cyan); }
+        .notif-badge { position: absolute; top: 10px; right: 12px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; box-shadow: 0 0 10px var(--red); }
+        .notif-dropdown { position: absolute; top: 56px; right: 0; width: 340px; background: rgba(11, 17, 32, 0.95); backdrop-filter: blur(24px); border: 1px solid var(--rim-blue); border-radius: var(--r-lg); padding: 16px; display: none; box-shadow: 0 20px 60px rgba(0,0,0,0.9); z-index: 100; transform: translateY(10px); opacity: 0; transition: all 0.3s var(--spring); }
+        .notif-dropdown.show { display: block; opacity: 1; transform: translateY(0); }
+        .notif-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--divider); padding-bottom: 10px; }
+        .notif-item { display: flex; gap: 14px; padding: 12px; border-bottom: 1px solid var(--divider); cursor: pointer; transition: background 0.2s; border-radius: var(--r-sm); }
+        .notif-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .notif-item:hover { background: rgba(255,255,255,0.05); }
+        .n-ico { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .n-txt { font-size: 13px; font-weight: 600; line-height: 1.4; color: var(--text); }
+        .n-time { font-size: 11px; color: var(--muted); margin-top: 6px; font-weight: 500;}
+
         /* ─── Ambient Background ─── */
         .orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; animation: drift 25s infinite ease-in-out alternate; }
@@ -102,7 +129,10 @@
             display: flex; align-items: center; gap: 8px; padding: 8px 14px;
             background: rgba(255,255,255,0.03); border: 1px solid var(--rim); border-radius: 20px;
             font-size: 11px; font-weight: 600; color: var(--muted); backdrop-filter: blur(10px);
+            display: none; 
         }
+        @media (min-width: 600px) { .connectivity-badge { display: flex; } }
+        
         .conn-dot {
             width: 8px; height: 8px; border-radius: 50%;
             background: var(--green); box-shadow: 0 0 10px var(--green);
@@ -208,7 +238,7 @@
         .q-lbl { font-size: 11px; font-weight: 700; color: var(--text); }
 
         /* Ledger */
-        .sec-hdr { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 12px; }
+        .sec-hdr { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 12px; flex-shrink: 0; }
         .sec-title { font-size: 15px; font-weight: 800; letter-spacing: 0.3px; }
         .sec-link { font-size: 12px; font-weight: 700; color: var(--cyan); cursor: pointer; transition: color 0.2s; }
         .sec-link:hover { color: #FFF; }
@@ -362,16 +392,12 @@
         }
         .vault-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
         
-        /* Specific Vault Styles */
         .vault-card.expense:hover { background: rgba(30, 58, 138, 0.2); border-color: rgba(59, 130, 246, 0.4); }
-        
         .vault-card.ml { background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), transparent); border-color: rgba(239, 68, 68, 0.2); }
         .vault-card.ml:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 12px 30px rgba(239, 68, 68, 0.15); }
-        
         .vault-card.digest { background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), transparent); border-color: rgba(139, 92, 246, 0.2); display: flex; align-items: center; gap: 14px; }
         .vault-card.digest:hover { background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 12px 30px rgba(139, 92, 246, 0.15); }
 
-        /* Card Internals */
         .v-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .v-ico { font-size: 24px; }
         .v-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
@@ -397,10 +423,7 @@
         .digest-badge { padding: 6px 12px; background: rgba(255,255,255,0.1); border-radius: 12px; font-size: 11px; font-weight: 800; flex-shrink: 0; }
 
         /* Fraud Shield Panel */
-        .fraud-widget {
-            margin: 0 24px; background: linear-gradient(135deg, rgba(239,68,68,0.05), rgba(139,92,246,0.05));
-            border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-md); padding: 18px;
-        }
+        .fraud-widget { margin: 0 24px; background: linear-gradient(135deg, rgba(239,68,68,0.05), rgba(139,92,246,0.05)); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-md); padding: 18px; }
         .fraud-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
         .fraud-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
         .fraud-stats { display: flex; gap: 12px; }
@@ -410,11 +433,7 @@
 
         /* Services Grid inside Vault */
         .srv-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; padding: 0 24px; }
-        .srv-card {
-            background: var(--surface); border: 1px solid var(--rim); border-radius: var(--r-md);
-            padding: 16px; display: flex; flex-direction: column; gap: 12px;
-            cursor: pointer; transition: all 0.3s var(--spring);
-        }
+        .srv-card { background: var(--surface); border: 1px solid var(--rim); border-radius: var(--r-md); padding: 16px; display: flex; flex-direction: column; gap: 12px; cursor: pointer; transition: all 0.3s var(--spring); }
         .srv-card:hover { background: rgba(37,99,235,0.1); border-color: var(--cyan); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
         .srv-ico { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--surface); border: 1px solid var(--rim); }
         .srv-t { font-size: 14px; font-weight: 700; }
@@ -439,7 +458,7 @@
         .modal::-webkit-scrollbar { width: 0; }
         
         .modal-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .modal-title { font-size: 20px; font-weight: 800; color: var(--text); }
+        .modal-title { font-size: 20px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 10px;}
         .modal-close {
             width: 36px; height: 36px; border-radius: 50%; border: none;
             background: var(--surface); cursor: pointer; font-size: 16px; color: var(--muted);
@@ -467,11 +486,31 @@
         .submit-btn:active { transform: translateY(0); }
         .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* Scheme Modal Lists */
-        .scheme-item {
-            background: var(--surface); border: 1px solid var(--rim); border-radius: var(--r-md);
-            padding: 18px; margin-bottom: 12px; transition: all 0.2s;
+        /* ─── PIN Pad ─── */
+        .pin-dots { display: flex; justify-content: center; gap: 16px; margin: 24px 0 32px; }
+        .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--faint); transition: all 0.2s; }
+        .pin-dot.filled { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 12px rgba(6,182,212,0.6); }
+        .pin-dot.error { background: var(--red); border-color: var(--red); box-shadow: 0 0 12px rgba(239,68,68,0.6); }
+        
+        .pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 280px; margin: 0 auto; }
+        .pin-key {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--rim);
+            border-radius: var(--r-md); padding: 18px; font-size: 24px; font-weight: 700;
+            color: var(--text); cursor: pointer; transition: all 0.2s var(--spring);
+            display: flex; align-items: center; justify-content: center;
         }
+        .pin-key:hover { background: rgba(59,130,246,0.15); border-color: var(--cyan); transform: scale(1.05); }
+        .pin-key:active { transform: scale(0.95); }
+
+        @keyframes shake {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(0) translateX(-10px); }
+            50% { transform: translateY(0) translateX(10px); }
+            75% { transform: translateY(0) translateX(-10px); }
+        }
+
+        /* Scheme Modal Lists */
+        .scheme-item { background: var(--surface); border: 1px solid var(--rim); border-radius: var(--r-md); padding: 18px; margin-bottom: 12px; transition: all 0.2s; }
         .scheme-item:hover { border-color: var(--rim-blue); background: rgba(255,255,255,0.06); }
         .scheme-name { font-size: 16px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
         .scheme-badge { font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800; }
@@ -486,25 +525,33 @@
         .emi-table th { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); width: 50%; }
         .emi-table tr:not(:last-child) td { border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* Upload Zone */
-        .upload-zone {
-            width: 100%; border: 2px dashed rgba(59, 130, 246, 0.4); border-radius: var(--r-lg);
-            padding: 30px 20px; text-align: center; cursor: pointer; transition: all 0.3s;
-            background: rgba(59,130,246,0.05); margin-bottom: 16px;
+        /* Scanner UI */
+        .scanner-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; cursor: pointer; }
+        .scanner-frame {
+            width: 220px; height: 220px; position: relative;
+            background: rgba(0,0,0,0.4); border-radius: 16px; overflow: hidden;
+            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.05);
         }
-        .upload-zone:hover, .upload-zone.drag-over { border-color: var(--cyan); background: rgba(6,182,212,0.1); transform: scale(1.02); }
-        .upload-zone input { display: none; }
-        .upload-ico { font-size: 32px; margin-bottom: 12px; }
-        .upload-lbl { font-size: 15px; font-weight: 700; color: var(--text); }
-        .upload-sub { font-size: 13px; color: var(--faint); margin-top: 6px; }
+        .scanner-frame::before {
+            content: ''; position: absolute; inset: 0;
+            background: 
+                linear-gradient(to right, var(--cyan) 4px, transparent 4px) 0 0,
+                linear-gradient(to bottom, var(--cyan) 4px, transparent 4px) 0 0,
+                linear-gradient(to left, var(--cyan) 4px, transparent 4px) 100% 0,
+                linear-gradient(to bottom, var(--cyan) 4px, transparent 4px) 100% 0,
+                linear-gradient(to right, var(--cyan) 4px, transparent 4px) 0 100%,
+                linear-gradient(to top, var(--cyan) 4px, transparent 4px) 0 100%,
+                linear-gradient(to left, var(--cyan) 4px, transparent 4px) 100% 100%,
+                linear-gradient(to top, var(--cyan) 4px, transparent 4px) 100% 100%;
+            background-repeat: no-repeat; background-size: 40px 40px; z-index: 2;
+        }
+        .scanner-laser {
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--cyan); box-shadow: 0 0 15px 2px var(--cyan);
+            animation: scanLaser 2.5s infinite ease-in-out alternate; z-index: 3;
+        }
+        @keyframes scanLaser { 0% { top: 10px; } 100% { top: 210px; } }
 
-        .scan-line {
-            position: absolute; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-            animation: scanMove 2s linear infinite; display: none;
-            box-shadow: 0 0 15px var(--cyan);
-        }
-        @keyframes scanMove { from { top: 0; } to { top: 100%; } }
         .img-preview-wrap { position: relative; overflow: hidden; border-radius: var(--r-md); }
 
         /* ─── Mobile Nav ─── */
@@ -549,15 +596,12 @@
         @media (max-width: 1200px) {
             .mobile-nav { display: block; }
             .layout { padding: 0; gap: 0; }
-            .side-panel, .centre {
-                display: none; width: 100%; border-radius: 0; border: none;
-                box-shadow: none; background: transparent; height: 100%;
-            }
+            .side-panel, .centre { display: none; width: 100%; border-radius: 0; border: none; box-shadow: none; background: transparent; height: 100%; }
             .panel-active { display: flex !important; animation: fadeUp 0.3s ease; }
             @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
             
             .wallet-section { padding: 16px 16px 0; }
-            .vault-card, .ml-card, .digest-card, .fraud-widget, .cibil-card, .srv-grid { margin-left: 16px; margin-right: 16px; }
+            .vault-card, .fraud-widget, .cibil-card, .srv-grid { margin-left: 16px; margin-right: 16px; }
             .r-content { padding-bottom: 24px; }
             .chat-area { padding: 0 16px 20px; }
             .orb-wrapper { padding: 20px 0; }
@@ -573,6 +617,37 @@
     </style>
 </head>
 <body>
+
+<!-- ─── Splash Screen ─── -->
+<div class="splash" id="splash">
+    <div class="splash-card">
+        <div class="brand-icon" style="margin: 0 auto 20px; width: 56px; height: 56px; border-radius: 16px;">
+            <svg viewBox="0 0 24 24" style="width:30px; height:30px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+        </div>
+        <div class="splash-title">Hello, <span>Ramesh</span></div>
+        <div class="splash-sub">Select your preferred language to continue to Dhan-Mitra AI.</div>
+        <div class="splash-grid">
+            <div class="lang-card" onclick="initApp('en')">
+                <span>English</span><small>Welcome</small>
+            </div>
+            <div class="lang-card" onclick="initApp('hi')">
+                <span>हिंदी</span><small>नमस्ते</small>
+            </div>
+            <div class="lang-card" onclick="initApp('ta')">
+                <span>தமிழ்</span><small>வணக்கம்</small>
+            </div>
+            <div class="lang-card" onclick="initApp('te')">
+                <span>తెలుగు</span><small>నమస్కారం</small>
+            </div>
+            <div class="lang-card" onclick="initApp('bn')">
+                <span>বাংলা</span><small>স্বাগতম</small>
+            </div>
+            <div class="lang-card" onclick="initApp('or')">
+                <span>ଓଡ଼ିଆ</span><small>ସ୍ଵାଗତମ୍</small>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="orbs">
     <div class="orb orb-1"></div>
@@ -598,6 +673,32 @@
                 <span class="lang-flag" id="langFlag">🇬🇧</span>
                 <span id="langName">English</span>
             </div>
+
+            <div class="notif-container" style="position:relative">
+                <button class="notif-btn" onclick="toggleNotif()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <div class="notif-badge"></div>
+                </button>
+                <div class="notif-dropdown" id="notifDrop">
+                    <div class="notif-hdr">
+                        <span style="font-weight:800;font-size:14px;color:var(--text)">Notifications</span>
+                        <span style="color:var(--cyan);font-size:11px;font-weight:700;cursor:pointer;" onclick="toggleNotif()">Mark all read</span>
+                    </div>
+                    <div class="notif-item">
+                        <div class="n-ico" style="background:rgba(245,158,11,0.15)">🛡️</div>
+                        <div><div class="n-txt">PMJJBY Insurance renewal of ₹436 is due next week.</div><div class="n-time">2 hours ago</div></div>
+                    </div>
+                    <div class="notif-item">
+                        <div class="n-ico" style="background:rgba(16,185,129,0.15)">📈</div>
+                        <div><div class="n-txt">Great news! Your CIBIL Score increased by 12 points.</div><div class="n-time">Yesterday</div></div>
+                    </div>
+                    <div class="notif-item" onclick="openModal('scanModal'); toggleNotif();">
+                        <div class="n-ico" style="background:rgba(239,68,68,0.15)">🚨</div>
+                        <div><div class="n-txt">Fraud Shield blocked 1 suspicious SMS link today.</div><div class="n-time">Yesterday</div></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="avatar" onclick="openModal('profileModal')">R</div>
         </div>
     </div>
@@ -610,14 +711,14 @@
     <aside class="side-panel panel-active" id="panelL">
         <div class="wallet-section">
             <div class="greeting-row">
-                <div class="g-time" id="gTime">Good Morning</div>
+                <div class="g-time" id="gTime" data-i18n="gTimeM">Good Morning</div>
                 <div class="g-name">Ramesh Kumar</div>
             </div>
             <div class="card-3d" id="card3d">
                 <div class="wallet-card" id="wCard">
                     <div class="card-shine" id="cShine"></div>
                     <div class="chip"></div>
-                    <div class="bal-lbl">Available Balance</div>
+                    <div class="bal-lbl" data-i18n="availBal">Available Balance</div>
                     <div class="bal-row">
                         <div class="bal-amt" id="balAmt">₹0</div>
                         <button class="eye-btn" onclick="toggleBal()" title="Show/Hide Balance">
@@ -631,22 +732,22 @@
             <div class="quick-row">
                 <button class="q-btn" onclick="openModal('scanModal')">
                     <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
-                    <span class="q-lbl">Scan</span>
+                    <span class="q-lbl" data-i18n="scan">Scan</span>
                 </button>
                 <button class="q-btn" onclick="openModal('payModal')">
                     <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    <span class="q-lbl">Pay</span>
+                    <span class="q-lbl" data-i18n="pay">Pay</span>
                 </button>
                 <button class="q-btn" onclick="openModal('schemesModal')">
                     <svg viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
-                    <span class="q-lbl">Schemes</span>
+                    <span class="q-lbl" data-i18n="schemes">Schemes</span>
                 </button>
             </div>
         </div>
 
         <div class="sec-hdr">
-            <span class="sec-title">Recent Activity</span>
-            <span class="sec-link" onclick="showToast('📋','Loading all transactions...')">See All →</span>
+            <span class="sec-title" data-i18n="recentAct">Recent Activity</span>
+            <span class="sec-link" onclick="showToast('📋','Loading all transactions...')" data-i18n="seeAll">See All →</span>
         </div>
         <div class="ledger" id="ledger">
             <!-- Rendered by JS -->
@@ -657,13 +758,16 @@
     <section class="centre" id="panelC">
         <div class="status-pill" id="statusPill">
             <div class="pipe-dot" id="pipeDot"></div>
-            <span id="pipeText">Dhan-Mitra AI Ready</span>
+            <span id="pipeText" data-i18n="aiReady">Dhan-Mitra AI Ready</span>
         </div>
 
         <div class="chat-area" id="chatArea">
             <div class="no-msgs" id="noMsgs">
                 <div class="no-msgs-ico">🎙️</div>
-                <div class="no-msgs-txt">Tap the mic to speak, or choose a suggestion below.<br><span style="color:var(--faint);font-size:13px;display:block;margin-top:8px;">Ask in Hindi, Tamil, Telugu or English</span></div>
+                <div class="no-msgs-txt">
+                    <span data-i18n="tapSpeakLong">Tap the mic to speak, or choose a suggestion below.</span><br>
+                    <span style="color:var(--faint);font-size:13px;display:block;margin-top:8px;" data-i18n="askInLangs">Ask in Hindi, Tamil, Telugu, Bengali, Odia or English</span>
+                </div>
             </div>
         </div>
 
@@ -676,7 +780,7 @@
                 <div class="orb-rings"></div>
             </div>
             <div class="orb-label">
-                <div class="orb-main" id="micLbl">Tap to Speak</div>
+                <div class="orb-main" id="micLbl" data-i18n="tapSpeak">Tap to Speak</div>
                 <div class="ticker">
                     <div class="ticker-track" id="tickerTrack">
                         <div class="ticker-item">💡 PMJJBY: ₹2L life cover for just ₹436/year</div>
@@ -698,7 +802,7 @@
             <!-- CIBIL Score -->
             <div class="cibil-card">
                 <div class="cibil-hdr">
-                    <span class="cibil-title">CIBIL Score</span>
+                    <span class="cibil-title" data-i18n="cibil">CIBIL Score</span>
                     <span class="cibil-badge" id="cibilBadge">EXCELLENT</span>
                 </div>
                 <div class="cibil-score" id="cibilScore">0</div>
@@ -707,37 +811,35 @@
             </div>
 
             <div class="sec-hdr vault-hdr">
-                <span class="sec-title">Wealth & Services</span>
+                <span class="sec-title" data-i18n="wealthSrv">Wealth & Services</span>
             </div>
 
             <div class="srv-grid">
                 <div class="srv-card" onclick="openSchemesModal()">
-                    <div class="srv-ico">🛡️</div>
-                    <div><div class="srv-t">Life Cover</div><div class="srv-d">PMJJBY Eligible ✓</div></div>
+                    <div class="srv-ico" style="color:var(--electric)">🛡️</div>
+                    <div><div class="srv-t" data-i18n="lifeCover">Life Cover</div><div class="srv-d" data-i18n="pmjjbyElig">PMJJBY Eligible ✓</div></div>
                 </div>
                 <div class="srv-card" onclick="openModal('loanModal')">
-                    <div class="srv-ico">💰</div>
-                    <div><div class="srv-t">Govt Loans</div><div class="srv-d">KCC from 7% p.a.</div></div>
+                    <div class="srv-ico" style="color:var(--amber)">💰</div>
+                    <div><div class="srv-t" data-i18n="govtLoans">Govt Loans</div><div class="srv-d" data-i18n="kccRate">KCC from 7% p.a.</div></div>
                 </div>
                 <div class="srv-card" onclick="openModal('scanModal')">
-                    <div class="srv-ico">📸</div>
-                    <div><div class="srv-t">Vision Scan</div><div class="srv-d">Analyze documents</div></div>
+                    <div class="srv-ico" style="color:var(--purple)">📸</div>
+                    <div><div class="srv-t" data-i18n="visionScan">Vision Scan</div><div class="srv-d" data-i18n="analyzeDoc">Analyze documents</div></div>
                 </div>
                 <div class="srv-card" onclick="downloadStatement()">
-                    <div class="srv-ico">📊</div>
-                    <div><div class="srv-t">Statement</div><div class="srv-d">Download PDF</div></div>
+                    <div class="srv-ico" style="color:var(--green)">📊</div>
+                    <div><div class="srv-t" data-i18n="statement">Statement</div><div class="srv-d" data-i18n="downloadPdf">Download PDF</div></div>
                 </div>
             </div>
 
-            <!-- EXTRACTED VAULT FEATURES -->
-            
             <!-- Expense Tracker -->
             <div class="vault-card expense" onclick="openModal('expenseModal')">
                 <div class="v-hdr">
                     <div class="v-ico">📉</div>
                     <div>
-                        <div class="v-title">Expense Tracker</div>
-                        <div class="v-sub">Weekly breakdown</div>
+                        <div class="v-title" data-i18n="expTrack">Expense Tracker</div>
+                        <div class="v-sub" data-i18n="weekBreakdown">Weekly breakdown</div>
                     </div>
                 </div>
                 <div class="bars">
@@ -757,15 +859,15 @@
             <!-- Moneylender Escape -->
             <div class="vault-card ml" onclick="openModal('mlModal')">
                 <div class="v-hdr" style="margin-bottom:8px">
-                    <span class="v-ico">⚠️</span><span class="ml-ttl">Moneylender Escape</span>
+                    <span class="v-ico">⚠️</span><span class="ml-ttl" data-i18n="mlEscape">Moneylender Escape</span>
                 </div>
-                <div class="ml-body">Paying 48–72% interest? Find formal credit alternatives and save thousands annually.</div>
-                <div class="ml-link">Calculate Savings <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+                <div class="ml-body" data-i18n="mlDesc">Paying 48–72% interest? Find formal credit alternatives and save thousands annually.</div>
+                <div class="ml-link"><span data-i18n="calcSave">Calculate Savings</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
             </div>
 
             <!-- Fraud Shield Stats -->
             <div class="fraud-widget">
-                <div class="fraud-hdr"><span class="v-ico">🛡️</span><span class="fraud-title">Fraud Shield — This Month</span></div>
+                <div class="fraud-hdr"><span class="v-ico">🛡️</span><span class="fraud-title" data-i18n="fraudShield">Fraud Shield — This Month</span></div>
                 <div class="fraud-stats">
                     <div class="fraud-stat"><div class="fraud-num">23</div><div class="fraud-lbl">Scams Blocked</div></div>
                     <div class="fraud-stat"><div class="fraud-num" style="color:var(--amber)">2</div><div class="fraud-lbl">Need Review</div></div>
@@ -777,8 +879,8 @@
             <div class="vault-card digest" onclick="showToast('📬','Weekly digest will be sent to you via WhatsApp every Monday 9AM')">
                 <div class="digest-ico">📬</div>
                 <div class="digest-info">
-                    <div class="digest-t">Weekly Digest</div>
-                    <div class="digest-s">Sent via WhatsApp</div>
+                    <div class="digest-t" data-i18n="digest">Weekly Digest</div>
+                    <div class="digest-s" data-i18n="sentWa">Sent via WhatsApp</div>
                 </div>
                 <div class="digest-badge">Mon 9AM</div>
             </div>
@@ -792,7 +894,7 @@
     <div class="mnav">
         <div class="mnav-item" id="mnavL" onclick="mobileNav('L', 'mnavL')">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-            <span>Wallet</span>
+            <span data-i18n="scan">Wallet</span>
         </div>
         <div class="mnav-item active" id="mnavC" onclick="mobileNav('C', 'mnavC')">
             <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
@@ -827,30 +929,101 @@
                 <label class="form-label">Note (optional)</label>
                 <input class="form-input" id="payNote" placeholder="For groceries..." />
             </div>
-            <button class="submit-btn" id="payBtn" onclick="doTransfer()">Send Money →</button>
+            <button class="submit-btn" id="payBtn" onclick="initPay()">Send Money →</button>
             <div style="font-size:11px;color:var(--faint);text-align:center;margin-top:8px">UPI secured · Max ₹1,00,000 per transaction</div>
         </div>
     </div>
 </div>
 
-<!-- Scan / OCR Modal -->
-<div class="modal-overlay" id="scanModal">
-    <div class="modal">
+<!-- PIN Auth Modal -->
+<div class="modal-overlay" id="pinModal">
+    <div class="modal" style="max-width: 380px; text-align: center;">
         <div class="modal-hdr">
-            <div class="modal-title">📸 Vision Scan</div>
-            <button class="modal-close" onclick="closeModal('scanModal')">✕</button>
+            <div class="modal-title" style="margin: 0 auto;">🔒 Verify PIN</div>
+            <button class="modal-close" style="position:absolute; right:32px;" onclick="closeModal('pinModal')">✕</button>
         </div>
-        <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6">Upload a screenshot of any banking message, UPI alert, or suspicious SMS. Our AI will analyze it for fraud or explain it simply.</p>
-        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('imgFile').click()" ondragover="handleDrag(event)" ondrop="handleDrop(event)">
-            <input type="file" id="imgFile" accept="image/*" onchange="handleFileSelect(event)">
-            <div id="uploadContent">
-                <div class="upload-ico">📁</div>
-                <div class="upload-lbl">Click to upload or drag & drop</div>
-                <div class="upload-sub">JPG, PNG, GIF · Max 5MB</div>
+        
+        <div style="margin-bottom: 32px; color: var(--muted); font-size: 14px; line-height: 1.5;">
+            Enter your 4-digit UPI PIN to securely send <br>
+            <strong style="color:var(--cyan); font-size:24px; display:block; margin-top:8px;" id="pinAmtLabel">₹0</strong>
+            to <strong style="color:var(--text)" id="pinToLabel">User</strong>
+        </div>
+        
+        <div class="pin-dots" id="pinDots">
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+        </div>
+
+        <div class="pin-grid">
+            <button class="pin-key" onclick="pinTap('1')">1</button>
+            <button class="pin-key" onclick="pinTap('2')">2</button>
+            <button class="pin-key" onclick="pinTap('3')">3</button>
+            <button class="pin-key" onclick="pinTap('4')">4</button>
+            <button class="pin-key" onclick="pinTap('5')">5</button>
+            <button class="pin-key" onclick="pinTap('6')">6</button>
+            <button class="pin-key" onclick="pinTap('7')">7</button>
+            <button class="pin-key" onclick="pinTap('8')">8</button>
+            <button class="pin-key" onclick="pinTap('9')">9</button>
+            <div></div>
+            <button class="pin-key" onclick="pinTap('0')">0</button>
+            <button class="pin-key" onclick="pinDel()">⌫</button>
+        </div>
+    </div>
+</div>
+
+<!-- Scan & Pay / OCR Modal -->
+<div class="modal-overlay" id="scanModal">
+    <div class="modal" style="text-align: center;">
+        <div class="modal-hdr">
+            <div class="modal-title" style="margin: 0 auto; display:flex; align-items:center; gap:8px;" data-i18n="scanAndPay">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                Scan & Pay
+            </div>
+            <button class="modal-close" style="position:absolute; right:32px;" onclick="closeModal('scanModal')">✕</button>
+        </div>
+        
+        <div id="scannerSection">
+            <!-- Viewfinder -->
+            <div class="scanner-container" onclick="initScanPay()">
+                <div class="scanner-frame">
+                    <div class="scanner-laser"></div>
+                </div>
+                <div style="font-size:13px; color:var(--muted); margin-top:16px;" data-i18n="alignQr">Align QR code within the frame</div>
+            </div>
+
+            <div style="margin: 24px 0; display:flex; align-items:center; gap:12px;">
+                <div style="flex:1; height:1px; background:var(--rim);"></div>
+                <span style="font-size:11px; color:var(--faint); font-weight:800; letter-spacing:1px;" data-i18n="orUpi">OR ENTER UPI ID</span>
+                <div style="flex:1; height:1px; background:var(--rim);"></div>
+            </div>
+
+            <div class="transfer-form">
+                <div class="form-group">
+                    <input class="form-input" id="scanUpiId" placeholder="e.g. merchant@sbi or 9876543210" style="text-align:center; font-size:16px; background:rgba(0,0,0,0.4);" />
+                </div>
+                <button class="submit-btn" onclick="initScanPay()" data-i18n="verifyPay">Verify & Pay →</button>
+            </div>
+
+            <!-- AI Vision Fallback -->
+            <div style="margin-top: 24px; border-top: 1px solid var(--rim); padding-top: 20px;">
+                <div style="font-size:12px; color:var(--muted); margin-bottom:12px;" data-i18n="suspiciousMsg">Suspicious QR or Message?</div>
+                <button class="q-btn" style="width:100%; flex-direction:row; justify-content:center; padding:12px; background:rgba(255,255,255,0.03);" onclick="document.getElementById('imgFile').click()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span style="color:var(--text); margin-left:8px; font-weight:700; font-size:13px;" data-i18n="uploadVision">Upload to AI Vision</span>
+                </button>
+                <input type="file" id="imgFile" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
             </div>
         </div>
-        <div id="scanResult" style="margin-top:16px;display:none"></div>
-        <button class="submit-btn" id="scanBtn" style="margin-top:16px;display:none" onclick="analyzeImage()">Analyze with AI 🔍</button>
+
+        <!-- Vision Scan Area (Shown after upload) -->
+        <div id="visionScanArea" style="display:none;">
+            <div id="uploadContent"></div>
+            <div id="scanResult" style="margin-top:16px;display:none; text-align:left;"></div>
+            <button class="submit-btn" id="scanBtn" style="margin-top:16px;display:none" onclick="analyzeImage()">Analyze with AI 🔍</button>
+            <button class="submit-btn" style="margin-top:12px; background:transparent; border:1px solid var(--rim); color:var(--muted); box-shadow:none;" onclick="resetScanModal()">← Back to Scanner</button>
+        </div>
     </div>
 </div>
 
@@ -973,7 +1146,7 @@
 
 <script>
 // ══════════════════════════════════════════════════════
-// CONFIG
+// CONFIG & I18N
 // ══════════════════════════════════════════════════════
 
 const BACKEND = 'http://localhost:5678/webhook';
@@ -982,45 +1155,153 @@ const BACKEND = 'http://localhost:5678/webhook';
 
 const TIMEOUT_MS = 6000;
 const USER_ID = 'U_RAMESH_001';
-const USER_PROFILE = { age: 42, income: 180000, occupation: 'farmer' };
 
 const LANGS = [
     { code: 'en', name: 'English', flag: '🇬🇧', locale: 'en-IN' },
     { code: 'hi', name: 'हिंदी',   flag: '🇮🇳', locale: 'hi-IN' },
     { code: 'ta', name: 'தமிழ்',  flag: '🇮🇳', locale: 'ta-IN' },
     { code: 'te', name: 'తెలుగు', flag: '🇮🇳', locale: 'te-IN' },
+    { code: 'bn', name: 'বাংলা', flag: '🇮🇳', locale: 'bn-IN' },
+    { code: 'or', name: 'ଓଡ଼ିଆ', flag: '🇮🇳', locale: 'or-IN' },
 ];
 
+const I18N = {
+    en: {
+        gTimeM: "Good Morning", gTimeA: "Good Afternoon", gTimeE: "Good Evening",
+        availBal: "Available Balance", scan: "Scan", pay: "Pay", schemes: "Schemes",
+        recentAct: "Recent Activity", seeAll: "See All →", aiReady: "Dhan-Mitra AI Ready",
+        tapSpeakLong: "Tap the mic to speak, or choose a suggestion below.", askInLangs: "Ask in Hindi, Tamil, Telugu, Bengali, Odia or English",
+        tapSpeak: "Tap to Speak", cibil: "CIBIL SCORE", wealthSrv: "Wealth & Services",
+        lifeCover: "Life Cover", pmjjbyElig: "PMJJBY Eligible ✓", govtLoans: "Govt Loans", kccRate: "KCC from 7% p.a.",
+        visionScan: "Vision Scan", analyzeDoc: "Analyze documents", statement: "Statement", downloadPdf: "Download PDF",
+        expTrack: "Expense Tracker", weekBreakdown: "Weekly breakdown", mlEscape: "Moneylender Escape",
+        mlDesc: "Paying 48–72% interest? Find formal credit alternatives and save thousands annually.", calcSave: "Calculate Savings",
+        fraudShield: "Fraud Shield — This Month", digest: "Weekly Digest", sentWa: "Sent via WhatsApp",
+        scanAndPay: "📷 Scan & Pay", alignQr: "Align QR code within the frame", orUpi: "OR ENTER UPI ID",
+        verifyPay: "Verify & Pay →", suspiciousMsg: "Suspicious QR or Message?", uploadVision: "Upload to AI Vision"
+    },
+    hi: {
+        gTimeM: "सुप्रभात", gTimeA: "शुभ दोपहर", gTimeE: "शुभ संध्या",
+        availBal: "उपलब्ध राशि", scan: "स्कैन", pay: "पे", schemes: "योजनाएं",
+        recentAct: "हाल की गतिविधि", seeAll: "सभी देखें →", aiReady: "Dhan-Mitra AI तैयार है",
+        tapSpeakLong: "बोलने के लिए माइक पर टैप करें या नीचे से एक सुझाव चुनें।", askInLangs: "हिंदी, तमिल, तेलुगु, बंगाली, ओड़िया या अंग्रेजी में पूछें",
+        tapSpeak: "बोलने के लिए टैप करें", cibil: "सिबिल (CIBIL) स्कोर", wealthSrv: "धन और सेवाएं",
+        lifeCover: "जीवन बीमा", pmjjbyElig: "PMJJBY योग्य ✓", govtLoans: "सरकारी ऋण", kccRate: "KCC 7% प्रति वर्ष से",
+        visionScan: "विज़न स्कैन", analyzeDoc: "दस्तावेज़ों का विश्लेषण करें", statement: "स्टेटमेंट", downloadPdf: "पीडीएफ डाउनलोड करें",
+        expTrack: "खर्च ट्रैकर", weekBreakdown: "साप्ताहिक सारांश", mlEscape: "साहूकार से बचाव",
+        mlDesc: "क्या आप 48-72% ब्याज दे रहे हैं? औपचारिक ऋण विकल्प खोजें और हर साल हजारों बचाएं।", calcSave: "बचत की गणना करें",
+        fraudShield: "फ्रॉड शील्ड — इस महीने", digest: "साप्ताहिक सारांश", sentWa: "WhatsApp के माध्यम से भेजा गया",
+        scanAndPay: "📷 स्कैन और पे", alignQr: "QR कोड को फ्रेम में रखें", orUpi: "या UPI ID दर्ज करें",
+        verifyPay: "सत्यापित करें और पे करें →", suspiciousMsg: "संदिग्ध QR या संदेश?", uploadVision: "AI विज़न पर अपलोड करें"
+    },
+    ta: {
+        gTimeM: "காலை வணக்கம்", gTimeA: "மதிய வணக்கம்", gTimeE: "மாலை வணக்கம்",
+        availBal: "இருப்பு தொகை", scan: "ஸ்கேன்", pay: "செலுத்து", schemes: "திட்டங்கள்",
+        recentAct: "சமீபத்தியவை", seeAll: "அனைத்தும் காண்க →", aiReady: "Dhan-Mitra AI தயார்",
+        tapSpeakLong: "பேசுவதற்கு மைக்கை தட்டவும் அல்லது ஒரு பரிந்துரையைத் தேர்ந்தெடுக்கவும்.", askInLangs: "இந்தி, தமிழ், தெலுங்கு, வங்காளம், ஒடியா அல்லது ஆங்கிலத்தில் கேளுங்கள்",
+        tapSpeak: "பேச தட்டவும்", cibil: "CIBIL மதிப்பெண்", wealthSrv: "சேவைகள்",
+        lifeCover: "ஆயுள் காப்பீடு", pmjjbyElig: "PMJJBY தகுதி ✓", govtLoans: "அரசு கடன்கள்", kccRate: "KCC 7% p.a. இலிருந்து",
+        visionScan: "விஷன் ஸ்கேன்", analyzeDoc: "ஆவணங்களை பகுப்பாய்வு செய்க", statement: "அறிக்கை", downloadPdf: "PDF பதிவிறக்கவும்",
+        expTrack: "செலவு கண்காணிப்பு", weekBreakdown: "வாராந்திர சுருக்கம்", mlEscape: "கந்துவட்டி தப்பிப்பு",
+        mlDesc: "48-72% வட்டி செலுத்துகிறீர்களா? முறையான கடன் மாற்று வழிகளைக் கண்டறிந்து ஆயிரக்கணக்கானவற்றை சேமிக்கவும்.", calcSave: "சேமிப்பை கணக்கிடுங்கள்",
+        fraudShield: "மோசடி பாதுகாப்பு — இந்த மாதம்", digest: "வாராந்திர சுருக்கம்", sentWa: "WhatsApp மூலம் அனுப்பப்பட்டது",
+        scanAndPay: "📷 ஸ்கேன் & பே", alignQr: "QR குறியீட்டை சட்டத்திற்குள் வைக்கவும்", orUpi: "அல்லது UPI ID ஐ உள்ளிடவும்",
+        verifyPay: "சரிபார்த்து செலுத்து →", suspiciousMsg: "சந்தேகத்திற்குரிய QR அல்லது செய்தியா?", uploadVision: "AI விஷனுக்கு பதிவேற்றவும்"
+    },
+    te: {
+        gTimeM: "శుభోదయం", gTimeA: "శుభ మధ్యాహ్నం", gTimeE: "శుభ సాయంత్రం",
+        availBal: "అందుబాటులో ఉన్న బ్యాలెన్స్", scan: "స్కాన్", pay: "చెల్లించండి", schemes: "పథకాలు",
+        recentAct: "ఇటీవలి లావాదేవీలు", seeAll: "అన్నీ చూడండి →", aiReady: "Dhan-Mitra AI సిద్ధంగా ఉంది",
+        tapSpeakLong: "మాట్లాడటానికి మైక్‌ను నొక్కండి లేదా సూచనను ఎంచుకోండి.", askInLangs: "హిందీ, తమిళం, తెలుగు, బెంగాలీ, ఒడియా లేదా ఇంగ్లీష్‌లో అడగండి",
+        tapSpeak: "మాట్లాడటానికి నొక్కండి", cibil: "CIBIL స్కోర్", wealthSrv: "సంపద & సేవలు",
+        lifeCover: "జీవిత బీమా", pmjjbyElig: "PMJJBY అర్హులు ✓", govtLoans: "ప్రభుత్వ రుణాలు", kccRate: "KCC 7% p.a. నుండి",
+        visionScan: "విజన్ స్కాన్", analyzeDoc: "పత్రాలను విశ్లేషించండి", statement: "స్టేట్‌మెంట్", downloadPdf: "PDF డౌన్‌లోడ్ చేయండి",
+        expTrack: "ఖర్చుల ట్రాకర్", weekBreakdown: "వారపు బ్రేక్డౌన్", mlEscape: "వడ్డీ వ్యాపారి నుండి రక్షణ",
+        mlDesc: "48-72% వడ్డీ చెల్లిస్తున్నారా? అధికారిక క్రెడిట్ ప్రత్యామ్నాయాలను కనుగొనండి మరియు ఆదా చేయండి.", calcSave: "పొదుపును లెక్కించండి",
+        fraudShield: "ఫ్రాడ్ షీల్డ్ — ఈ నెల", digest: "వారపు డైజెస్ట్", sentWa: "WhatsApp ద్వారా పంపబడింది",
+        scanAndPay: "📷 స్కాన్ & పే", alignQr: "ఫ్రేమ్‌లో QR కోడ్‌ను ఉంచండి", orUpi: "లేదా UPI ID నమోదు చేయండి",
+        verifyPay: "ధృవీకరించి చెల్లించండి →", suspiciousMsg: "అనుమానాస్పద QR లేదా సందేశమా?", uploadVision: "AI విజన్‌కు అప్‌లోడ్ చేయండి"
+    },
+    bn: {
+        gTimeM: "সুপ্ৰভাত", gTimeA: "শুভ অপরাহ্ন", gTimeE: "শুভ সন্ধ্যা",
+        availBal: "উপলব্ধ ব্যালেন্স", scan: "স্ক্যান", pay: "পে", schemes: "স্কিম",
+        recentAct: "সাম্প্রতিক কার্যকলাপ", seeAll: "সব দেখুন →", aiReady: "ধন-মিত্র AI প্রস্তুত",
+        tapSpeakLong: "কথা বলতে মাইক ট্যাপ করুন, বা নিচে থেকে একটি পরামর্শ বেছে নিন।", askInLangs: "হিন্দি, তামিল, তেলুগু, বাংলা, ওড়িয়া বা ইংরেজিতে জিজ্ঞাসা করুন",
+        tapSpeak: "কথা বলতে ট্যাপ করুন", cibil: "সিবিল (CIBIL) স্কোর", wealthSrv: "সম্পদ এবং পরিষেবা",
+        lifeCover: "জীবন বীমা", pmjjbyElig: "PMJJBY যোগ্য ✓", govtLoans: "সরকারি ঋণ", kccRate: "KCC ৭% থেকে",
+        visionScan: "ভিশন স্ক্যান", analyzeDoc: "নথি বিশ্লেষণ করুন", statement: "বিবৃতি", downloadPdf: "PDF ডাউনলোড করুন",
+        expTrack: "খরচ ট্র্যাকার", weekBreakdown: "সাপ্তাহিক সারাংশ", mlEscape: "মহাজন থেকে মুক্তি",
+        mlDesc: "আপনি কি ৪৮-৭২% সুদ দিচ্ছেন? আনুষ্ঠানিক ক্রেডিট বিকল্প খুঁজুন এবং হাজার হাজার সঞ্চয় করুন।", calcSave: "সঞ্চয় গণনা করুন",
+        fraudShield: "ফ্রড শিল্ড — এই মাসে", digest: "সাপ্তাহিক ডাইজেস্ট", sentWa: "WhatsApp-এর মাধ্যমে পাঠানো হয়েছে",
+        scanAndPay: "📷 স্ক্যান এবং পে", alignQr: "ফ্রেমের মধ্যে QR কোড রাখুন", orUpi: "অথবা UPI ID লিখুন",
+        verifyPay: "যাচাই করুন এবং পে করুন →", suspiciousMsg: "সন্দেহজনক QR বা মেসেজ?", uploadVision: "AI ভিশনে আপলোড করুন"
+    },
+    or: {
+        gTimeM: "ସୁପ୍ରଭାତ", gTimeA: "ଶୁଭ ଅପରାହ୍ନ", gTimeE: "ଶୁଭ ସନ୍ଧ୍ୟା",
+        availBal: "ଉପଲବ୍ଧ ବାଲାନ୍ସ", scan: "ସ୍କାନ୍", pay: "ପେ", schemes: "ଯୋଜନା",
+        recentAct: "ସାମ୍ପ୍ରତିକ କାର୍ଯ୍ୟକଳାପ", seeAll: "ସବୁ ଦେଖନ୍ତୁ →", aiReady: "ଧନ-ମିତ୍ର AI ପ୍ରସ୍ତୁତ",
+        tapSpeakLong: "କହିବାକୁ ମାଇକ୍ ଟ୍ୟାପ୍ କରନ୍ତୁ, କିମ୍ବା ତଳୁ ଏକ ପରାମର୍ଶ ବାଛନ୍ତୁ।", askInLangs: "ହିନ୍ଦୀ, ତାମିଲ, ତେଲୁଗୁ, ବଙ୍ଗାଳୀ, ଓଡ଼ିଆ କିମ୍ବା ଇଂରାଜୀରେ ପଚାରନ୍ତୁ",
+        tapSpeak: "କହିବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ", cibil: "ସିବିଲ୍ ସ୍କୋର୍", wealthSrv: "ସମ୍ପତ୍ତି ଏବଂ ସେବା",
+        lifeCover: "ଜୀବନ ବୀମା", pmjjbyElig: "PMJJBY ଯୋଗ୍ୟ ✓", govtLoans: "ସରକାରୀ ଋଣ", kccRate: "KCC ୭% ରୁ",
+        visionScan: "ଭିଜନ୍ ସ୍କାନ୍", analyzeDoc: "ଡକ୍ୟୁମେଣ୍ଟ୍ ବିଶ୍ଳେଷଣ କରନ୍ତୁ", statement: "ଷ୍ଟେଟମେଣ୍ଟ", downloadPdf: "PDF ଡାଉନଲୋଡ୍ କରନ୍ତୁ",
+        expTrack: "ଖର୍ଚ୍ଚ ଟ୍ରାକର୍", weekBreakdown: "ସାପ୍ତାହିକ ବିବରଣୀ", mlEscape: "ସାହୁକାରଙ୍କଠାରୁ ମୁକ୍ତି",
+        mlDesc: "ଆପଣ ୪୮-୭୨% ସୁଧ ଦେଉଛନ୍ତି କି? ଆନୁଷ୍ଠାନିକ କ୍ରେଡିଟ୍ ବିକଳ୍ପ ଖୋଜନ୍ତୁ ଏବଂ ହଜାର ହଜାର ସଞ୍ଚୟ କରନ୍ତୁ।", calcSave: "ସଞ୍ଚୟ ଗଣନା କରନ୍ତୁ",
+        fraudShield: "ଫ୍ରଡ୍ ସିଲ୍ଡ — ଏହି ମାସରେ", digest: "ସାପ୍ତାହିକ ଡାଇଜେଷ୍ଟ", sentWa: "WhatsApp ମାଧ୍ୟମରେ ପଠାଯାଇଛି",
+        scanAndPay: "📷 ସ୍କାନ୍ ଏବଂ ପେ", alignQr: "ଫ୍ରେମ୍ ମଧ୍ୟରେ QR କୋଡ୍ ରଖନ୍ତୁ", orUpi: "କିମ୍ବା UPI ID ଲେଖନ୍ତୁ",
+        verifyPay: "ଯାଞ୍ଚ କରନ୍ତୁ ଏବଂ ପେ କରନ୍ତୁ →", suspiciousMsg: "ସନ୍ଦେହଜନକ QR କିମ୍ବା ମେସେଜ୍?", uploadVision: "AI ଭିଜନ୍‌କୁ ଅପଲୋଡ୍ କରନ୍ତୁ"
+    }
+};
+
 const SAMPLES = {
-    en: ['Check my balance', 'Transfer ₹500 to Raj', 'Show last transactions', 'Am I eligible for PMJJBY?', 'What is my CIBIL score?'],
-    hi: ['मेरा बैलेंस क्या है?', '₹500 राज को भेजो', 'Mini statement दिखाओ', 'PMJJBY eligible हूं?', 'Loan kaise milega?'],
+    en: ['Check my balance', 'Transfer ₹500 to Raj', 'Show last transactions', 'Am I eligible for PMJJBY?'],
+    hi: ['मेरा बैलेंस क्या है?', '₹500 राज को भेजो', 'Mini statement दिखाओ', 'PMJJBY eligible हूं?'],
     ta: ['என் balance என்ன?', '₹500 ராஜ்-க்கு அனுப்பு', 'Mini statement காட்டு', 'PMJJBY தகுதி உள்ளதா?'],
     te: ['నా balance ఎంత?', '₹500 రాజ్ కి పంపు', 'Statement చూపించు', 'PMJJBY అర్హులా?'],
+    bn: ['আমার ব্যালেন্স কত?', 'রাজকে ₹৫০০ পাঠান', 'মিনি স্টেটমেন্ট দেখান', 'আমি কি PMJJBY এর জন্য যোগ্য?'],
+    or: ['ମୋର ବାଲାନ୍ସ କେତେ?', 'ରାଜକୁ ₹୫୦୦ ପଠାନ୍ତୁ', 'ମିନି ଷ୍ଟେଟମେଣ୍ଟ ଦେଖାନ୍ତୁ', 'ମୁଁ PMJJBY ପାଇଁ ଯୋଗ୍ୟ କି?']
 };
+
+function executeUITransfer(amt, to) {
+    const oldBal = S.bal;
+    S.bal -= amt;
+    if (S.balVisible) animateNum('balAmt', oldBal, S.bal, 800, '₹');
+    TXN_DATA.unshift({ ico: '💸', name: to, time: 'Just now', amt: -amt });
+    renderLedger();
+}
 
 const FALLBACKS = {
     en: {
-        BALANCE_INQUIRY: h => `Your SBI account balance is <strong style="color:var(--cyan);font-family:'Space Grotesk',sans-serif">₹24,500</strong>.<br><span style="color:var(--muted);font-size:12px">Account: SBI ••• 4821 · Updated just now</span>`,
-        FUND_TRANSFER:   h => `✅ <strong>Transfer Initiated</strong><br>₹${h.slots?.amount||500} sent to ${h.slots?.recipient||'Raj'}.<br>New balance: <strong style="color:var(--cyan)">₹24,000</strong><br><span style="color:var(--muted);font-size:12px">Ref: TXN20260329${Math.floor(Math.random()*9999)}</span>`,
-        MINI_STATEMENT:  h => `📋 <strong>Last 3 Transactions</strong><br><br>🛒 Reliance Smart — <span style="color:#f87171">−₹450</span><br>💸 Rajesh Kumar — <span style="color:var(--green)">+₹2,000</span><br>⚡ Electricity Bill — <span style="color:#f87171">−₹1,200</span>`,
+        BALANCE_INQUIRY: h => `Your SBI account balance is <strong style="color:var(--cyan);font-family:'Space Grotesk',sans-serif">₹${S.bal.toLocaleString('en-IN')}</strong>.<br><span style="color:var(--muted);font-size:12px">Account: SBI ••• 4821 · Updated just now</span>`,
+        MINI_STATEMENT:  h => `📋 <strong>Last Transactions</strong><br><br>🛒 Reliance Smart — <span style="color:#f87171">−₹450</span><br>💸 Rajesh Kumar — <span style="color:var(--green)">+₹2,000</span><br>⚡ Electricity Bill — <span style="color:#f87171">−₹1,200</span>`,
         INSURANCE_ELIGIBILITY: h => `🛡️ <strong>You're eligible for PMJJBY!</strong><br><br>• Coverage: ₹2 lakh life insurance<br>• Premium: <strong style="color:var(--green)">₹436/year (₹1.19/day)</strong><br>• How: Visit your nearest SBI branch with Aadhaar<br><br><span class="scheme-chip">PMSBY</span> <span class="scheme-chip">APY</span> also available!`,
         UNKNOWN:         h => `I heard: "<em>${h.transcript}</em>"<br><br>I can help with balance checks, transfers, mini statements, scheme eligibility, loan info, fraud alerts, and EMI calculations. Try asking in Hindi too! 🙏`,
     },
     hi: {
-        BALANCE_INQUIRY: h => `आपके SBI खाते में <strong style="color:var(--cyan)">₹24,500</strong> उपलब्ध हैं।<br><span style="color:var(--muted);font-size:12px">खाता: SBI ••• 4821</span>`,
-        FUND_TRANSFER:   h => `✅ <strong>Transfer सफल!</strong><br>${h.slots?.recipient||'राज'} को ₹${h.slots?.amount||500} भेजे गए।<br>नया बैलेंस: <strong style="color:var(--cyan)">₹24,000</strong>`,
+        BALANCE_INQUIRY: h => `आपके SBI खाते में <strong style="color:var(--cyan)">₹${S.bal.toLocaleString('en-IN')}</strong> उपलब्ध हैं।<br><span style="color:var(--muted);font-size:12px">खाता: SBI ••• 4821</span>`,
         MINI_STATEMENT:  h => `📋 <strong>आखिरी 3 लेन-देन</strong><br><br>🛒 Reliance — <span style="color:#f87171">−₹450</span><br>💸 राजेश — <span style="color:var(--green)">+₹2,000</span><br>⚡ बिजली बिल — <span style="color:#f87171">−₹1,200</span>`,
         INSURANCE_ELIGIBILITY: h => `🛡️ <strong>आप PMJJBY के योग्य हैं!</strong><br><br>• कवरेज: ₹2 लाख जीवन बीमा<br>• प्रीमियम: <strong style="color:var(--green)">₹436/वर्ष</strong><br>• कैसे: आधार लेकर नजदीकी SBI शाखा जाएं`,
         UNKNOWN:         h => `मैंने सुना: "<em>${h.transcript}</em>"<br><br>मैं बैलेंस, ट्रांसफर, स्टेटमेंट, सरकारी योजनाएं, लोन और फ्रॉड की जानकारी दे सकता हूं।`,
     },
     ta: {
-        BALANCE_INQUIRY: h => `உங்கள் SBI கணக்கில் <strong style="color:var(--cyan)">₹24,500</strong> உள்ளது.`,
+        BALANCE_INQUIRY: h => `உங்கள் SBI கணக்கில் <strong style="color:var(--cyan)">₹${S.bal.toLocaleString('en-IN')}</strong> உள்ளது.`,
         UNKNOWN:         h => `நான் கேட்டது: "<em>${h.transcript}</em>"<br>Balance, transfer, scheme info கேளுங்கள்!`,
     },
     te: {
-        BALANCE_INQUIRY: h => `మీ SBI ఖాతాలో <strong style="color:var(--cyan)">₹24,500</strong> ఉంది.`,
+        BALANCE_INQUIRY: h => `మీ SBI ఖాతాలో <strong style="color:var(--cyan)">₹${S.bal.toLocaleString('en-IN')}</strong> ఉంది.`,
         UNKNOWN:         h => `నేను విన్నాను: "<em>${h.transcript}</em>"<br>Balance, transfer, scheme గురించి అడగండి!`,
     },
+    bn: {
+        BALANCE_INQUIRY: h => `আপনার SBI অ্যাকাউন্টে <strong style="color:var(--cyan)">₹${S.bal.toLocaleString('en-IN')}</strong> আছে।<br><span style="color:var(--muted);font-size:12px">অ্যাকাউন্ট: SBI ••• 4821</span>`,
+        MINI_STATEMENT:  h => `📋 <strong>শেষ ৩টি লেনদেন</strong><br><br>🛒 Reliance — <span style="color:#f87171">−₹450</span><br>💸 রাজেশ — <span style="color:var(--green)">+₹2,000</span><br>⚡ বিদ্যুৎ বিল — <span style="color:#f87171">−₹1,200</span>`,
+        INSURANCE_ELIGIBILITY: h => `🛡️ <strong>আপনি PMJJBY এর জন্য যোগ্য!</strong><br><br>• কভারেজ: ₹২ লাখ জীবন বীমা<br>• প্রিমিয়াম: <strong style="color:var(--green)">₹৪৩৬/বছর</strong><br>• কীভাবে: আধার নিয়ে নিকটস্থ SBI শাখায় যান`,
+        UNKNOWN:         h => `আমি শুনেছি: "<em>${h.transcript}</em>"<br><br>আমি ব্যালেন্স, ট্রান্সফার, স্কিম ইত্যাদি সম্পর্কে সাহায্য করতে পারি।`
+    },
+    or: {
+        BALANCE_INQUIRY: h => `ଆପଣଙ୍କ SBI ଆକାଉଣ୍ଟରେ <strong style="color:var(--cyan)">₹${S.bal.toLocaleString('en-IN')}</strong> ଅଛି।<br><span style="color:var(--muted);font-size:12px">ଆକାଉଣ୍ଟ: SBI ••• 4821</span>`,
+        MINI_STATEMENT:  h => `📋 <strong>ଶେଷ ୩ଟି ଟ୍ରାଞ୍ଜାକ୍ସନ୍</strong><br><br>🛒 Reliance — <span style="color:#f87171">−₹450</span><br>💸 ରାଜେଶ — <span style="color:var(--green)">+₹2,000</span><br>⚡ ବିଦ୍ୟୁତ୍ ବିଲ୍ — <span style="color:#f87171">−₹1,200</span>`,
+        INSURANCE_ELIGIBILITY: h => `🛡️ <strong>ଆପଣ PMJJBY ପାଇଁ ଯୋଗ୍ୟ!</strong><br><br>• କଭରେଜ୍: ₹୨ ଲକ୍ଷ ଜୀବନ ବୀମା<br>• ପ୍ରିମିୟମ୍: <strong style="color:var(--green)">₹୪୩୬/ବର୍ଷ</strong><br>• କିପରି: ଆଧାର ସହିତ ନିକଟସ୍ଥ SBI ଶାଖାକୁ ଯାଆନ୍ତୁ`,
+        UNKNOWN:         h => `ମୁଁ ଶୁଣିଲି: "<em>${h.transcript}</em>"<br><br>ମୁଁ ବାଲାନ୍ସ, ଟ୍ରାନ୍ସଫର୍, ସ୍କିମ୍ ବିଷୟରେ ସାହାଯ୍ୟ କରିପାରିବି।`
+    }
 };
 
 // ══════════════════════════════════════════════════════
@@ -1031,6 +1312,7 @@ const S = {
     bal: 24500, balVisible: true,
     backendOnline: false, imgBase64: null, imgType: null,
     tickIdx: 0, toastTimer: null,
+    pin: '', pendingTxn: null
 };
 
 const TXN_DATA = [
@@ -1045,33 +1327,70 @@ const TXN_DATA = [
 // ══════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════
-function init() {
-    setGreeting();
-    renderLedger();
-    renderSuggestions();
-    startTicker();
-    setup3DCard();
-    checkBackend();
-    animateNum('balAmt', 0, S.bal, 1400, '₹');
+
+function initApp(langCode) {
+    const splash = document.getElementById('splash');
+    splash.style.opacity = '0';
     setTimeout(() => {
-        animateNum('cibilScore', 0, 784, 2000, '');
-        document.getElementById('scoreFill').style.width = '78%';
-    }, 600);
-    // Mobile default: show centre
-    if (window.innerWidth <= 1200) {
-        mobileNav('C', 'mnavC');
-    }
-    setInterval(checkBackend, 30000);
+        splash.style.display = 'none';
+        const idx = LANGS.findIndex(l => l.code === langCode);
+        if(idx !== -1) S.lIdx = idx;
+        
+        updateLangUI();
+        renderLedger();
+        startTicker();
+        setup3DCard();
+        checkBackend();
+        animateNum('balAmt', 0, S.bal, 1400, '₹');
+        setTimeout(() => {
+            animateNum('cibilScore', 0, 784, 2000, '');
+            document.getElementById('scoreFill').style.width = '78%';
+        }, 600);
+        if (window.innerWidth <= 1200) { mobileNav('C', 'mnavC'); }
+        setInterval(checkBackend, 30000);
+    }, 500);
 }
 
-// ── Greeting ──
-function setGreeting() {
+function updateGreeting() {
     const h = new Date().getHours();
-    document.getElementById('gTime').textContent =
-        h < 12 ? 'Good Morning' : h < 17 ? 'Good Afternoon' : 'Good Evening';
+    const code = LANGS[S.lIdx].code;
+    const dict = I18N[code] || I18N.en;
+    let greet = h < 12 ? dict.gTimeM : h < 17 ? dict.gTimeA : dict.gTimeE;
+    document.getElementById('gTime').textContent = greet;
 }
 
-// ── Animated Number ──
+function updateLangUI() {
+    const l = LANGS[S.lIdx];
+    document.getElementById('langFlag').textContent = l.flag;
+    document.getElementById('langName').textContent = l.name;
+    renderSuggestions();
+    updateGreeting();
+    
+    const dict = I18N[l.code] || I18N.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if(dict[key]) el.innerHTML = dict[key];
+    });
+}
+
+function cycleLang() {
+    S.lIdx = (S.lIdx + 1) % LANGS.length;
+    updateLangUI();
+    showToast('🌐', `Language: ${LANGS[S.lIdx].name}`);
+    setPipe(`Language switched to ${LANGS[S.lIdx].name}`, 'var(--cyan)');
+}
+
+// ── Notifications ──
+function toggleNotif() {
+    document.getElementById('notifDrop').classList.toggle('show');
+}
+document.addEventListener('click', (e) => {
+    if(!e.target.closest('.notif-container')) {
+        const drop = document.getElementById('notifDrop');
+        if(drop && drop.classList.contains('show')) drop.classList.remove('show');
+    }
+});
+
 function animateNum(id, from, to, dur, prefix) {
     const el = document.getElementById(id);
     let ts = null;
@@ -1086,7 +1405,6 @@ function animateNum(id, from, to, dur, prefix) {
     requestAnimationFrame(step);
 }
 
-// ── 3D Card ──
 function setup3DCard() {
     const c3d = document.getElementById('card3d');
     const card = document.getElementById('wCard');
@@ -1105,7 +1423,6 @@ function setup3DCard() {
     });
 }
 
-// ── Ledger ──
 function renderLedger() {
     const el = document.getElementById('ledger');
     el.innerHTML = TXN_DATA.map(t => `
@@ -1120,7 +1437,6 @@ function renderLedger() {
     `).join('');
 }
 
-// ── Balance Toggle ──
 function toggleBal() {
     S.balVisible = !S.balVisible;
     const el = document.getElementById('balAmt');
@@ -1134,7 +1450,6 @@ function toggleBal() {
     }
 }
 
-// ── Ticker ──
 function startTicker() {
     const track = document.getElementById('tickerTrack');
     const count = track.children.length;
@@ -1144,18 +1459,6 @@ function startTicker() {
     }, 3800);
 }
 
-// ── Language ──
-function cycleLang() {
-    S.lIdx = (S.lIdx + 1) % LANGS.length;
-    const l = LANGS[S.lIdx];
-    document.getElementById('langFlag').textContent = l.flag;
-    document.getElementById('langName').textContent = l.name;
-    renderSuggestions();
-    showToast('🌐', `Language: ${l.name}`);
-    setPipe(`Language switched to ${l.name}`, 'var(--cyan)');
-}
-
-// ── Suggestions ──
 function renderSuggestions() {
     const code = LANGS[S.lIdx].code;
     const items = SAMPLES[code] || SAMPLES.en;
@@ -1164,11 +1467,10 @@ function renderSuggestions() {
         .join('');
 }
 
-// ── Backend Connectivity Check ──
 async function checkBackend() {
     try {
         const r = await Promise.race([
-            fetch(`${BACKEND}/voice-query`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ transcript: 'ping', language: 'en', user_id: USER_ID, jwt_token: 'ping.ping.ping' }) }),
+            fetch(`${BACKEND}/voice-query`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ transcript: 'ping', language: 'en', user_id: USER_ID }) }),
             new Promise((_, rj) => setTimeout(() => rj(new Error('timeout')), 3000))
         ]);
         S.backendOnline = r.ok || r.status > 0;
@@ -1178,10 +1480,10 @@ async function checkBackend() {
     const dot = document.getElementById('connDot');
     const txt = document.getElementById('connText');
     if (S.backendOnline) {
-        dot.style.background = 'var(--green)'; dot.style.boxShadow = '0 0 8px var(--green)';
+        dot.style.background = 'var(--green)'; dot.style.boxShadow = '0 0 10px var(--green)';
         txt.textContent = 'Backend Online';
     } else {
-        dot.style.background = 'var(--amber)'; dot.style.boxShadow = '0 0 8px var(--amber)';
+        dot.style.background = 'var(--amber)'; dot.style.boxShadow = '0 0 10px var(--amber)';
         txt.textContent = 'Demo Mode';
     }
 }
@@ -1189,9 +1491,7 @@ async function checkBackend() {
 // ══════════════════════════════════════════════════════
 // VOICE PIPELINE
 // ══════════════════════════════════════════════════════
-function toggleMic() {
-    S.mic === 'listening' ? stopMic() : startMic();
-}
+function toggleMic() { S.mic === 'listening' ? stopMic() : startMic(); }
 
 function startMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1217,23 +1517,44 @@ function stopMic() { if (S.rec) S.rec.stop(); }
 async function process(text) {
     setMic('processing'); showTyping(); setPipe('AI Processing…', 'var(--purple)');
     const lang = LANGS[S.lIdx].code;
+    
+    // Check if it's a transfer intent locally immediately to bypass standard delivery
+    const fakeIntent = detectIntent(text, lang);
+    if (fakeIntent === 'FUND_TRANSFER') {
+        hideTyping();
+        setMic('idle');
+        const slots = extractSlots(text);
+        const amt = slots.amount || 500;
+        const to = slots.recipient || 'Rajesh';
+        promptPin(amt, to, '');
+        return;
+    }
+
     try {
         const r = await Promise.race([
             fetch(`${BACKEND}/voice-query`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ transcript: text, language: lang, user_id: USER_ID, jwt_token: 'demo.jwt.token' })
+                body: JSON.stringify({ transcript: text, language: lang, user_id: USER_ID })
             }),
             new Promise((_, rj) => setTimeout(() => rj(new Error('timeout')), TIMEOUT_MS))
         ]);
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const d = await r.json();
+        
+        if (d.intent === 'FUND_TRANSFER') {
+            hideTyping(); setMic('idle');
+            const amt = d.slots?.amount || 500;
+            const to = d.slots?.recipient || 'Rajesh';
+            promptPin(amt, to, '');
+            return;
+        }
+
         const reply = d.response_text || d.audio_text || d.response || null;
         if (reply) { deliver(reply, d.intent, d); return; }
         throw new Error('no response field');
     } catch (e) {
         console.warn('Backend fallback:', e.message);
-        const fakeIntent = detectIntent(text, lang);
         const fallbacks = FALLBACKS[lang] || FALLBACKS.en;
         const fn = fallbacks[fakeIntent] || fallbacks.UNKNOWN || FALLBACKS.en.UNKNOWN;
         const reply = fn({ transcript: text, slots: extractSlots(text) });
@@ -1243,9 +1564,9 @@ async function process(text) {
 
 function detectIntent(text, lang) {
     const t = text.toLowerCase();
-    if (/balance|bakiya|பேலன்ஸ்|బ్యాలెన్స్|बैलेंस|शेष/.test(t)) return 'BALANCE_INQUIRY';
-    if (/transfer|send|bhejo|भेजो|அனுப்பு|పంపు|₹\d/.test(t)) return 'FUND_TRANSFER';
-    if (/statement|txn|transaction|mini|दिखाओ/.test(t)) return 'MINI_STATEMENT';
+    if (/balance|bakiya|பேலன்ஸ்|బ్యాలెన్స్|बैलेंस|शेष|ব্যালেন্স|ବାଲାନ୍ସ/.test(t)) return 'BALANCE_INQUIRY';
+    if (/transfer|send|pay|bhejo|भेजो|அனுப்பு|పంపు|পাঠান|ପଠାନ୍ତୁ|₹\d/.test(t)) return 'FUND_TRANSFER';
+    if (/statement|txn|transaction|mini|दिखाओ|দেখান|ଦେଖାନ୍ତୁ/.test(t)) return 'MINI_STATEMENT';
     if (/pmjjby|insurance|bima|eligible|योजना|scheme/.test(t)) return 'INSURANCE_ELIGIBILITY';
     if (/emi|loan|interest|kcc|mudra/.test(t)) return 'EMI_CALCULATE';
     if (/moneylender|sahukar|mahajan/.test(t)) return 'MONEYLENDER_ESCAPE';
@@ -1266,15 +1587,12 @@ function deliver(reply, intent, rawData) {
     hideTyping();
     setMic('idle');
     showAIBubble(reply, intent, rawData);
-    setPipe('Ready · System Online', 'var(--green)');
+    setPipe('System Ready', 'var(--green)');
     speak(reply.replace(/<[^>]*>/g,'').replace(/[•→✅🛡️💸📋⚡🏦]/g,''));
 }
 
 // ── Bubble helpers ──
-function hideNoMsgs() {
-    const el = document.getElementById('noMsgs');
-    if (el) el.style.display = 'none';
-}
+function hideNoMsgs() { const el = document.getElementById('noMsgs'); if (el) el.style.display = 'none'; }
 
 function showUserBubble(text) {
     const area = document.getElementById('chatArea');
@@ -1302,10 +1620,7 @@ function showTyping() {
     setTimeout(() => area.scrollTop = area.scrollHeight, 50);
 }
 
-function hideTyping() {
-    const t = document.getElementById('typingBubble');
-    if (t) { t.remove(); }
-}
+function hideTyping() { const t = document.getElementById('typingBubble'); if (t) { t.remove(); } }
 
 function showAIBubble(html, intent, data) {
     const area = document.getElementById('chatArea');
@@ -1353,6 +1668,7 @@ function setPipe(text, color) {
 function doSample(text) {
     if (window.innerWidth <= 1200) mobileNav('C', 'mnavC');
     hideNoMsgs();
+    showUserBubble(text);
     process(text);
 }
 
@@ -1365,43 +1681,131 @@ function speak(text) {
 }
 
 // ══════════════════════════════════════════════════════
-// MODALS
+// MODALS & SCANNER
 // ══════════════════════════════════════════════════════
 function openModal(id) {
     document.getElementById(id).classList.add('show');
     if (id === 'schemesModal') renderSchemes();
     if (id === 'expenseModal') renderExpenses();
+    if (id === 'scanModal') resetScanModal();
 }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show')); });
 document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); }));
 
-// ── Transfer ──
-async function doTransfer() {
+// ── Scan & Pay Integration ──
+function resetScanModal() {
+    document.getElementById('scannerSection').style.display = 'block';
+    document.getElementById('visionScanArea').style.display = 'none';
+    document.getElementById('scanUpiId').value = '';
+    S.imgBase64 = null;
+}
+
+function initScanPay() {
+    let to = document.getElementById('scanUpiId').value.trim();
+    if (!to) {
+        // Simulate a successful QR scan for the demo
+        to = "merchant@upi";
+        showToast('✅', 'QR Code Scanned');
+    }
+    closeModal('scanModal');
+    openModal('payModal');
+    document.getElementById('payTo').value = to;
+    setTimeout(() => document.getElementById('payAmt').focus(), 300);
+}
+
+// ── Secure Transfer / PIN Logic ──
+function initPay() {
     const to = document.getElementById('payTo').value.trim();
     const amt = parseFloat(document.getElementById('payAmt').value);
     const note = document.getElementById('payNote').value.trim();
     if (!to || !amt || amt <= 0) { showToast('⚠️', 'Please fill all required fields'); return; }
-    const btn = document.getElementById('payBtn');
-    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Processing…';
-    try {
-        const r = await Promise.race([
-            fetch(`${BACKEND}/voice-query`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ transcript: `Transfer ₹${amt} to ${to}${note ? ' for ' + note : ''}`, language: LANGS[S.lIdx].code, user_id: USER_ID, jwt_token: 'demo.jwt.token' }) }),
-            new Promise((_, rj) => setTimeout(() => rj(new Error('timeout')), TIMEOUT_MS))
-        ]);
-        const d = await r.json();
-        closeModal('payModal'); showToast('✅', `₹${amt} sent to ${to}`);
-        S.bal -= amt; if (S.balVisible) animateNum('balAmt', S.bal + amt, S.bal, 800, '₹');
-        TXN_DATA.unshift({ ico: '💸', name: to, time: 'Just now', amt: -amt }); renderLedger();
-        if (window.innerWidth <= 1200) mobileNav('C', 'mnavC');
-        hideNoMsgs();
-        showUserBubble(`Transfer ₹${amt} to ${to}`);
-        showAIBubble(FALLBACKS.en.FUND_TRANSFER({ slots: { amount: amt, recipient: to } }), 'FUND_TRANSFER', {});
-    } catch {
-        closeModal('payModal'); showToast('✅', `₹${amt} queued — will send when online`);
-    }
-    btn.disabled = false; btn.innerHTML = 'Send Money →';
+    
+    closeModal('payModal');
+    if (window.innerWidth <= 1200) mobileNav('C', 'mnavC');
+    hideNoMsgs();
+    showUserBubble(`Send ₹${amt} to ${to}`);
+    promptPin(amt, to, note);
 }
+
+function promptPin(amt, to, note) {
+    S.pendingTxn = { amt, to, note };
+    S.pin = '';
+    updatePinDots();
+    document.getElementById('pinAmtLabel').textContent = `₹${amt.toLocaleString('en-IN')}`;
+    document.getElementById('pinToLabel').textContent = to;
+    
+    setTimeout(() => {
+        openModal('pinModal');
+        setPipe('Awaiting Security PIN', 'var(--amber)');
+        showAIBubble(`🔒 Please enter your 4-digit PIN to securely transfer ₹${amt.toLocaleString('en-IN')} to ${to}.`, 'PIN_PROMPT', {});
+        speak(`Please enter your PIN to transfer ${amt} rupees to ${to}`);
+    }, 500);
+}
+
+function pinTap(d) {
+    if(S.pin.length < 4) {
+        S.pin += d;
+        updatePinDots();
+        if(S.pin.length === 4) setTimeout(verifyPin, 300);
+    }
+}
+
+function pinDel() {
+    S.pin = S.pin.slice(0, -1);
+    updatePinDots();
+}
+
+function updatePinDots(isError = false) {
+    const dots = document.querySelectorAll('.pin-dot');
+    dots.forEach((dot, i) => {
+        dot.className = 'pin-dot';
+        if (isError) dot.classList.add('error');
+        else if (i < S.pin.length) dot.classList.add('filled');
+    });
+}
+
+async function verifyPin() {
+    if (S.pin === '1234') {
+        closeModal('pinModal');
+        await doTransfer();
+    } else {
+        updatePinDots(true);
+        showToast('❌', 'Incorrect PIN');
+        const modal = document.querySelector('#pinModal .modal');
+        modal.style.animation = 'none';
+        void modal.offsetWidth; // trigger reflow
+        modal.style.animation = 'shake 0.4s';
+        setTimeout(() => { S.pin = ''; updatePinDots(); }, 600);
+    }
+}
+
+async function doTransfer() {
+    const { amt, to, note } = S.pendingTxn;
+    setMic('processing');
+    showToast('⏳', 'Processing payment securely...');
+    setPipe('Processing Payment…', 'var(--purple)');
+    
+    // Simulate network delay / backend ping
+    await new Promise(r => setTimeout(r, 1500));
+    
+    executeUITransfer(amt, to);
+    showToast('✅', `₹${amt} sent to ${to}`);
+    
+    const msg = `✅ <strong>Transfer Successful!</strong><br>₹${amt.toLocaleString('en-IN')} securely sent to ${to}.<br>New balance: <strong style="color:var(--cyan)">₹${S.bal.toLocaleString('en-IN')}</strong>`;
+    showAIBubble(msg, 'FUND_TRANSFER', {});
+    setMic('idle');
+    setPipe('Transfer Complete', 'var(--green)');
+    speak(`Transfer of ${amt} rupees to ${to} was successful.`);
+    
+    // Reset forms
+    document.getElementById('payTo').value = '';
+    document.getElementById('payAmt').value = '';
+    document.getElementById('payNote').value = '';
+    document.getElementById('scanUpiId').value = '';
+    S.pendingTxn = null;
+}
+
 
 // ── EMI Calculator ──
 function calcEMI() {
@@ -1454,8 +1858,6 @@ function calcMoneylender() {
 }
 
 // ── Schemes ──
-function openSchemesModal() { openModal('schemesModal'); }
-
 function renderSchemes() {
     const schemes = [
         { name: 'PMJJBY', benefit: '₹2 lakh life insurance', premium: '₹436/year', how: 'Visit your SBI branch with Aadhaar and fill Form 1A', badge: 'badge-low', eligible: true },
@@ -1527,13 +1929,18 @@ function processFile(file) {
     reader.onload = e => {
         const b64 = e.target.result.split(',')[1];
         S.imgBase64 = b64; S.imgType = file.type;
+        
+        document.getElementById('scannerSection').style.display = 'none';
+        document.getElementById('visionScanArea').style.display = 'block';
+        
         document.getElementById('uploadContent').innerHTML = `
             <div class="img-preview-wrap">
                 <img src="${e.target.result}" style="max-width:100%;max-height:180px;border-radius:12px;display:block;margin:0 auto;box-shadow:0 10px 20px rgba(0,0,0,0.5)">
                 <div class="scan-line" id="scanLine"></div>
             </div>
-            <div style="margin-top:12px;font-size:14px;color:var(--green);font-weight:700">✓ ${file.name} ready</div>`;
+            <div style="margin-top:12px;font-size:14px;color:var(--green);font-weight:700;text-align:center;">✓ ${file.name} ready</div>`;
         document.getElementById('scanBtn').style.display = 'block';
+        document.getElementById('scanResult').style.display = 'none';
     };
     reader.readAsDataURL(file);
 }
@@ -1592,11 +1999,9 @@ function showToast(ico, txt) {
     const el = document.getElementById('toast');
     el.classList.add('show');
     clearTimeout(S.toastTimer);
-    S.toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+    S.toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
 }
 
-// ── GO ──
-window.addEventListener('load', init);
 </script>
 </body>
 </html>
