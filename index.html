@@ -68,8 +68,8 @@
         .notif-badge { position: absolute; top: 10px; right: 12px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; box-shadow: 0 0 10px var(--red); }
         .notif-dropdown { position: absolute; top: 56px; right: 0; width: 340px; background: rgba(11, 17, 32, 0.95); backdrop-filter: blur(24px); border: 1px solid var(--rim-blue); border-radius: var(--r-lg); padding: 16px; display: none; box-shadow: 0 20px 60px rgba(0,0,0,0.9); z-index: 100; transform: translateY(10px); opacity: 0; transition: all 0.3s var(--spring); }
         .notif-dropdown.show { display: block; opacity: 1; transform: translateY(0); }
-        .notif-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--divider); padding-bottom: 10px; }
-        .notif-item { display: flex; gap: 14px; padding: 12px; border-bottom: 1px solid var(--divider); cursor: pointer; transition: background 0.2s; border-radius: var(--r-sm); }
+        .notif-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--rim); padding-bottom: 10px; }
+        .notif-item { display: flex; gap: 14px; padding: 12px; border-bottom: 1px solid var(--rim); cursor: pointer; transition: background 0.2s; border-radius: var(--r-sm); }
         .notif-item:last-child { border-bottom: none; padding-bottom: 0; }
         .notif-item:hover { background: rgba(255,255,255,0.05); }
         .n-ico { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
@@ -516,6 +516,7 @@
         .emi-table th { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); width: 50%; }
         .emi-table tr:not(:last-child) td { border-bottom: 1px solid rgba(255,255,255,0.05); }
 
+        /* Scanner Specific */
         .scanner-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; cursor: pointer; }
         .scanner-frame {
             width: 220px; height: 220px; position: relative;
@@ -542,7 +543,45 @@
         }
         @keyframes scanLaser { 0% { top: 10px; } 100% { top: 210px; } }
 
-        .img-preview-wrap { position: relative; overflow: hidden; border-radius: var(--r-md); }
+        /* Vision Scan Details */
+        .vision-upload-area {
+            border: 2px dashed rgba(59, 130, 246, 0.4);
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: var(--r-md);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 16px;
+        }
+        .vision-upload-area:hover {
+            border-color: var(--cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+        .vision-result-card {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: var(--r-md);
+            padding: 20px;
+            margin-top: 16px;
+            text-align: left;
+        }
+        .vision-summary-title { font-size: 13px; color: var(--green); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;}
+        .vision-step { display: flex; gap: 12px; margin-bottom: 12px; font-size: 14px; color: var(--text); line-height: 1.5; align-items: flex-start;}
+        .vision-step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--electric); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 2px;}
+
+        /* WhatsApp Digest styling */
+        .wa-bubble {
+            background: #005c4b;
+            padding: 14px;
+            border-radius: 12px 12px 12px 0;
+            color: #e9edef;
+            font-size: 14.5px;
+            line-height: 1.6;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
 
         .mobile-nav {
             display: none; flex-shrink: 0; background: rgba(2,6,18,0.95);
@@ -651,7 +690,7 @@
             background: rgba(6, 10, 24, 0.98);
             border: 1px solid rgba(239,68,68,0.3);
             border-radius: 28px; padding: 32px;
-            max-width: 600px; width: 100%;
+            max-width: 700px; width: 100%;
             box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 80px rgba(239,68,68,0.1);
             transform: scale(0.95) translateY(20px);
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
@@ -677,13 +716,14 @@
         #demoScenarioCards {
             display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
         }
-        @media (max-width: 500px) { #demoScenarioCards { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { #demoScenarioCards { grid-template-columns: 1fr; } }
 
         .demo-scenario-card {
             background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
             border-radius: 20px; padding: 22px; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
         }
         .demo-scenario-card::before {
             content: ''; position: absolute; inset: 0;
@@ -702,7 +742,7 @@
         .demo-card-num { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: rgba(255,255,255,0.08); line-height: 1; }
         .demo-card-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
         .demo-card-subtitle { font-size: 13px; font-weight: 700; color: var(--cyan); margin-bottom: 10px; font-family: 'Noto Sans Devanagari', sans-serif; }
-        .demo-card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+        .demo-card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; flex-grow: 1; }
         .demo-card-steps { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
         .demo-step-chip {
             font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5);
@@ -715,7 +755,7 @@
             background: linear-gradient(135deg, rgba(220,38,38,0.3), rgba(153,27,27,0.3));
             border: 1px solid rgba(239,68,68,0.4); border-radius: 12px;
             color: #fca5a5; font-size: 13px; font-weight: 800; text-align: center;
-            letter-spacing: 0.5px; transition: all 0.2s;
+            letter-spacing: 0.5px; transition: all 0.2s; margin-top: auto;
         }
         .demo-scenario-card:hover .demo-run-btn { background: linear-gradient(135deg, rgba(220,38,38,0.5), rgba(153,27,27,0.5)); color: #fff; }
 
@@ -800,9 +840,9 @@
                         <div class="n-ico" style="background:rgba(16,185,129,0.15)">📈</div>
                         <div><div class="n-txt">Great news! Your CIBIL Score increased by 12 points.</div><div class="n-time">Yesterday</div></div>
                     </div>
-                    <div class="notif-item" onclick="openModal('scanModal'); toggleNotif();">
+                    <div class="notif-item" onclick="openModal('visionModal'); toggleNotif();">
                         <div class="n-ico" style="background:rgba(239,68,68,0.15)">🚨</div>
-                        <div><div class="n-txt">Fraud Shield blocked 1 suspicious SMS link today.</div><div class="n-time">Yesterday</div></div>
+                        <div><div class="n-txt">Action Required: Your KYC update is pending. Please upload documents.</div><div class="n-time">Yesterday</div></div>
                     </div>
                 </div>
             </div>
@@ -922,9 +962,9 @@
                     <div class="srv-ico" style="color:var(--amber)">💰</div>
                     <div><div class="srv-t" data-i18n="govtLoans">Govt Loans</div><div class="srv-d" data-i18n="kccRate">KCC from 7% p.a.</div></div>
                 </div>
-                <div class="srv-card" onclick="openModal('scanModal')">
+                <div class="srv-card" onclick="openModal('visionModal')">
                     <div class="srv-ico" style="color:var(--purple)">📸</div>
-                    <div><div class="srv-t" data-i18n="visionScan">Vision Scan</div><div class="srv-d" data-i18n="analyzeDoc">Analyze documents</div></div>
+                    <div><div class="srv-t" data-i18n="visionScan">AI Vision</div><div class="srv-d" data-i18n="analyzeDoc">Analyze bank forms</div></div>
                 </div>
                 <div class="srv-card" onclick="downloadStatement()">
                     <div class="srv-ico" style="color:var(--green)">📊</div>
@@ -959,7 +999,7 @@
                     <div class="fraud-stat"><div class="fraud-num" style="color:var(--cyan)">99%</div><div class="fraud-lbl">Block Rate</div></div>
                 </div>
             </div>
-            <div class="vault-card digest" onclick="showToast('📬','Weekly digest sent via WhatsApp every Monday 9AM')">
+            <div class="vault-card digest" onclick="openModal('waModal')">
                 <div class="digest-ico">📬</div>
                 <div class="digest-info">
                     <div class="digest-t" data-i18n="digest">Weekly Digest</div>
@@ -989,6 +1029,118 @@
 </nav>
 
 <!-- MODALS -->
+
+<!-- WhatsApp Weekly Digest Modal -->
+<div class="modal-overlay" id="waModal">
+    <div class="modal" style="background:#0b141a; border-color:#00a884; max-width: 420px; padding: 0; overflow:hidden;">
+        <div style="background:#202c33; padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px;height:40px;background:#00a884;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;">🤖</div>
+                <div>
+                    <div style="color:#fff;font-weight:600;font-size:16px;">SwaarDhan AI Bot</div>
+                    <div style="color:#8696a0;font-size:12px;">Official Business Account</div>
+                </div>
+            </div>
+            <button onclick="closeModal('waModal')" style="background:none;border:none;color:#8696a0;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div style="padding:20px; background-color: #0b141a; background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 20px 20px; min-height: 350px; display:flex; flex-direction:column; justify-content:flex-end;">
+            <div style="text-align:center; margin-bottom:16px;"><span style="background:rgba(32,44,51,0.8); color:#8696a0; font-size:11px; padding:4px 12px; border-radius:12px;">TODAY</span></div>
+            <div class="wa-bubble" style="max-width: 90%; align-self: flex-start; margin-bottom: 8px;">
+                <strong style="color:#53bdeb; font-size:16px;">Weekly Financial Digest 📊</strong><br><br>
+                Namaste Ramesh! Here is your quick summary for the week:<br><br>
+                📉 <strong>Spent:</strong> ₹5,750 <span style="color:#00a884">(↓ 8% from last week)</span><br>
+                💰 <strong>Saved:</strong> ₹1,200<br>
+                📈 <strong>CIBIL Score:</strong> 784 <span style="color:#00a884">(↑ 12 pts)</span><br><br>
+                <em>💡 <strong>AI Tip:</strong> Don't forget to pay your upcoming electricity bill of ₹1,200 by tomorrow to avoid late fees. Type "Pay Bill" to clear it right now.</em>
+                <div style="text-align:right; font-size:11px; color:rgba(255,255,255,0.5); margin-top:8px;">09:00 AM</div>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+                <div style="background:#202c33; color:#00a884; padding:8px 16px; border-radius:16px; font-size:13px; font-weight:600; cursor:pointer;">Pay Bill</div>
+                <div style="background:#202c33; color:#00a884; padding:8px 16px; border-radius:16px; font-size:13px; font-weight:600; cursor:pointer;">View Analytics</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vision Scan Modal -->
+<div class="modal-overlay" id="visionModal">
+    <div class="modal" style="text-align: center;">
+        <div class="modal-hdr">
+            <div class="modal-title" style="margin: 0 auto;">📸 AI Vision Scan</div>
+            <button class="modal-close" style="position:absolute; right:32px;" onclick="closeModal('visionModal')">✕</button>
+        </div>
+
+        <!-- State 1: Upload -->
+        <div id="v-upload-state">
+            <p style="color:var(--muted); font-size:14px; margin-bottom:16px; line-height:1.5;">
+                Upload a confusing bank notice, error message, or form for instant AI analysis in your preferred language.
+            </p>
+            <div class="vision-upload-area" onclick="document.getElementById('v-file').click()">
+                <div style="font-size: 32px; margin-bottom: 12px;">📄</div>
+                <div style="font-weight: 700; color: var(--text); font-size: 16px;">Tap to Upload Document</div>
+                <div style="font-size: 12px; color: var(--muted); margin-top: 6px;">Supports JPG, PNG, PDF (Max 5MB)</div>
+                <input type="file" id="v-file" style="display:none" accept="image/*" onchange="handleVisionUpload(event)">
+            </div>
+        </div>
+
+        <!-- State 2: Scanning -->
+        <div id="v-scan-state" style="display:none; position:relative;">
+            <div class="scanner-frame" style="width: 100%; height: 250px; border-radius: 12px; margin: 0 auto; overflow: hidden; position: relative;">
+                <!-- Dummy document preview for animation -->
+                <div style="background: #fff; width: 100%; height: 100%; padding: 20px; text-align: left; color: #000; opacity: 0.8;">
+                    <div style="width: 40px; height: 40px; border: 2px solid #e00; border-radius: 50%; display:flex; align-items:center; justify-content:center; color:#e00; font-weight:bold; margin-bottom: 10px;">!</div>
+                    <h3 style="margin-bottom: 8px; font-family: sans-serif; font-size:16px;">ACCOUNT FROZEN NOTICE</h3>
+                    <div style="width: 80%; height: 8px; background: #ccc; margin-bottom: 6px;"></div>
+                    <div style="width: 90%; height: 8px; background: #ccc; margin-bottom: 6px;"></div>
+                    <div style="width: 60%; height: 8px; background: #ccc; margin-bottom: 16px;"></div>
+                    <div style="width: 100%; height: 40px; border: 1px dashed #999; margin-bottom: 6px;"></div>
+                </div>
+                <div class="scanner-laser" style="animation-duration: 1.5s;"></div>
+            </div>
+            <div style="margin-top: 20px; font-weight: 700; color: var(--cyan); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <div class="spinner"></div> Dhan-Mitra AI is analyzing...
+            </div>
+        </div>
+
+        <!-- State 3: Result -->
+        <div id="v-result-state" style="display:none;">
+            <div style="display: flex; gap: 16px; align-items: flex-start; background: rgba(255,255,255,0.03); padding: 16px; border-radius: var(--r-md); border: 1px solid var(--rim);">
+                <div style="width: 60px; height: 80px; background: #fff; border-radius: 6px; position: relative; overflow: hidden; flex-shrink: 0; display:flex; align-items:center; justify-content:center; border: 1px solid #ccc;">
+                    <span style="color:#e00; font-size:24px; font-weight:bold;">!</span>
+                </div>
+                <div style="text-align: left;">
+                    <div class="vision-summary-title">📄 Document Summary</div>
+                    <div style="font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.4;">
+                        Your SBI account has been temporarily frozen due to pending KYC verification.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vision-result-card">
+                <div class="vision-summary-title" style="color:var(--cyan); margin-bottom:12px;">✅ Next Steps for You</div>
+                <div class="vision-step">
+                    <div class="vision-step-num">1</div>
+                    <div>Tap the button below to upload a photo of your Aadhaar Card.</div>
+                </div>
+                <div class="vision-step">
+                    <div class="vision-step-num">2</div>
+                    <div>Verify your identity using a quick OTP sent to your registered mobile number.</div>
+                </div>
+                <div class="vision-step">
+                    <div class="vision-step-num">3</div>
+                    <div>Account will automatically unfreeze within 2-4 hours.</div>
+                </div>
+                <button class="submit-btn" style="margin-top: 16px; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="closeModal('visionModal'); showToast('✅', 'KYC Flow Initiated')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Start Digital KYC Now
+                </button>
+            </div>
+            
+            <button class="submit-btn" style="margin-top:12px; background:transparent; border:1px solid var(--rim); color:var(--muted); box-shadow:none;" onclick="resetVisionModal()">Scan Another Document</button>
+        </div>
+    </div>
+</div>
+
 <div class="modal-overlay" id="payModal">
     <div class="modal">
         <div class="modal-hdr">
@@ -1049,20 +1201,6 @@
                 <div class="form-group"><input class="form-input" id="scanUpiId" placeholder="e.g. merchant@sbi or 9876543210" style="text-align:center; font-size:16px;" /></div>
                 <button class="submit-btn" onclick="initScanPay()">Verify & Pay →</button>
             </div>
-            <div style="margin-top: 24px; border-top: 1px solid var(--rim); padding-top: 20px;">
-                <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">Suspicious QR or Message?</div>
-                <button class="q-btn" style="width:100%; flex-direction:row; justify-content:center; padding:12px;" onclick="document.getElementById('imgFile').click()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                    <span style="color:var(--text); margin-left:8px; font-weight:700; font-size:13px;">Upload to AI Vision</span>
-                </button>
-                <input type="file" id="imgFile" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
-            </div>
-        </div>
-        <div id="visionScanArea" style="display:none;">
-            <div id="uploadContent"></div>
-            <div id="scanResult" style="margin-top:16px;display:none; text-align:left;"></div>
-            <button class="submit-btn" id="scanBtn" style="margin-top:16px;display:none" onclick="analyzeImage()">Analyze with AI 🔍</button>
-            <button class="submit-btn" style="margin-top:12px; background:transparent; border:1px solid var(--rim); color:var(--muted); box-shadow:none;" onclick="resetScanModal()">← Back to Scanner</button>
         </div>
     </div>
 </div>
@@ -1137,7 +1275,7 @@
                 <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r-md);border:1px solid var(--rim)"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Phone</div><div style="font-size:15px;font-weight:700;margin-top:6px">+91 98765 43210</div></div>
                 <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r-md);border:1px solid var(--rim)"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Account</div><div style="font-size:15px;font-weight:700;margin-top:6px">SBI ••• 4821</div></div>
                 <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r-md);border:1px solid var(--rim)"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Aadhaar</div><div style="font-size:15px;font-weight:700;margin-top:6px">•••• •••• 8432</div></div>
-                <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r-md);border:1px solid var(--rim)"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">KYC Status</div><div style="font-size:15px;font-weight:700;margin-top:6px;color:var(--green)">✓ Verified</div></div>
+                <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r-md);border:1px solid var(--rim)"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">KYC Status</div><div style="font-size:15px;font-weight:700;margin-top:6px;color:var(--red)">Pending ⚠️</div></div>
             </div>
             <div style="padding:16px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:var(--r-md);font-size:13px;color:var(--muted);line-height:1.6">
                 🔒 AES-256 encrypted · RBI Compliant · <span style="color:var(--green);font-weight:700">Never shared with third parties</span>
@@ -1169,7 +1307,7 @@ const LANGS = [
 ];
 
 const I18N = {
-    en: { gTimeM:"Good Morning",gTimeA:"Good Afternoon",gTimeE:"Good Evening",availBal:"Available Balance",scan:"Scan",pay:"Pay",schemes:"Schemes",recentAct:"Recent Activity",seeAll:"See All →",aiReady:"Dhan-Mitra AI Ready",tapSpeakLong:"Tap the mic to speak, or choose a suggestion below.",askInLangs:"Ask in Hindi, Tamil, Telugu, Bengali, Odia or English",tapSpeak:"Tap to Speak",cibil:"CIBIL SCORE",wealthSrv:"Wealth & Services",lifeCover:"Life Cover",pmjjbyElig:"PMJJBY Eligible ✓",govtLoans:"Govt Loans",kccRate:"KCC from 7% p.a.",visionScan:"Vision Scan",analyzeDoc:"Analyze documents",statement:"Statement",downloadPdf:"Download PDF",expTrack:"Expense Tracker",weekBreakdown:"Weekly breakdown",mlEscape:"Moneylender Escape",mlDesc:"Paying 48–72% interest? Find formal credit alternatives.",calcSave:"Calculate Savings",fraudShield:"Fraud Shield — This Month",digest:"Weekly Digest",sentWa:"Sent via WhatsApp",typeMessage:"Type your message..." },
+    en: { gTimeM:"Good Morning",gTimeA:"Good Afternoon",gTimeE:"Good Evening",availBal:"Available Balance",scan:"Scan",pay:"Pay",schemes:"Schemes",recentAct:"Recent Activity",seeAll:"See All →",aiReady:"Dhan-Mitra AI Ready",tapSpeakLong:"Tap the mic to speak, or choose a suggestion below.",askInLangs:"Ask in Hindi, Tamil, Telugu, Bengali, Odia or English",tapSpeak:"Tap to Speak",cibil:"CIBIL SCORE",wealthSrv:"Wealth & Services",lifeCover:"Life Cover",pmjjbyElig:"PMJJBY Eligible ✓",govtLoans:"Govt Loans",kccRate:"KCC from 7% p.a.",visionScan:"AI Vision",analyzeDoc:"Analyze bank forms",statement:"Statement",downloadPdf:"Download PDF",expTrack:"Expense Tracker",weekBreakdown:"Weekly breakdown",mlEscape:"Moneylender Escape",mlDesc:"Paying 48–72% interest? Find formal credit alternatives.",calcSave:"Calculate Savings",fraudShield:"Fraud Shield — This Month",digest:"Weekly Digest",sentWa:"Sent via WhatsApp",typeMessage:"Type your message..." },
     hi: { gTimeM:"सुप्रभात",gTimeA:"शुभ दोपहर",gTimeE:"शुभ संध्या",availBal:"उपलब्ध राशि",scan:"स्कैन",pay:"पे",schemes:"योजनाएं",recentAct:"हाल की गतिविधि",seeAll:"सभी देखें →",aiReady:"Dhan-Mitra AI तैयार है",tapSpeakLong:"बोलने के लिए माइक पर टैप करें।",askInLangs:"हिंदी, तमिल, तेलुगु, बंगाली, ओड़िया या अंग्रेजी में पूछें",tapSpeak:"बोलने के लिए टैप करें",cibil:"सिबिल स्कोर",wealthSrv:"धन और सेवाएं",lifeCover:"जीवन बीमा",pmjjbyElig:"PMJJBY योग्य ✓",govtLoans:"सरकारी ऋण",kccRate:"KCC 7% प्रति वर्ष से",visionScan:"विज़न स्कैन",analyzeDoc:"दस्तावेज़ विश्लेषण",statement:"स्टेटमेंट",downloadPdf:"PDF डाउनलोड",expTrack:"खर्च ट्रैकर",weekBreakdown:"साप्ताहिक सारांश",mlEscape:"साहूकार से बचाव",mlDesc:"क्या आप 48-72% ब्याज दे रहे हैं?",calcSave:"बचत गणना करें",fraudShield:"फ्रॉड शील्ड — इस महीने",digest:"साप्ताहिक सारांश",sentWa:"WhatsApp द्वारा",typeMessage:"अपना संदेश यहाँ लिखें..." },
     ta: { gTimeM:"காலை வணக்கம்",tapSpeak:"பேச தட்டவும்",aiReady:"Dhan-Mitra AI தயார்",typeMessage:"உங்கள் செய்தியை தட்டச்சு செய்க..." },
     te: { gTimeM:"శుభోదయం",tapSpeak:"మాట్లాడటానికి నొక్కండి",aiReady:"Dhan-Mitra AI సిద్ధంగా ఉంది",typeMessage:"మీ సందేశాన్ని టైప్ చేయండి..." },
@@ -1617,20 +1755,40 @@ function openModal(id) {
     document.getElementById(id).classList.add('show');
     if (id === 'schemesModal') renderSchemes();
     if (id === 'expenseModal') renderExpenses();
-    if (id === 'scanModal') resetScanModal();
+    if (id === 'scanModal') {
+        document.getElementById('scanUpiId').value = '';
+    }
 }
 function openSchemesModal() { openModal('schemesModal'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show')); });
 document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); }));
 
-function resetScanModal() {
-    document.getElementById('scannerSection').style.display = 'block';
-    document.getElementById('visionScanArea').style.display = 'none';
-    document.getElementById('scanUpiId').value = '';
-    S.imgBase64 = null;
+/* Vision Scan Reset */
+function resetVisionModal() {
+    document.getElementById('v-upload-state').style.display = 'block';
+    document.getElementById('v-scan-state').style.display = 'none';
+    document.getElementById('v-result-state').style.display = 'none';
 }
 
+function handleVisionUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Go straight into analysis visually
+        document.getElementById('v-upload-state').style.display = 'none';
+        document.getElementById('v-scan-state').style.display = 'block';
+        
+        // Simulating the AI analyzing it
+        setTimeout(() => {
+            document.getElementById('v-scan-state').style.display = 'none';
+            document.getElementById('v-result-state').style.display = 'block';
+            showToast('✅', 'Document analyzed successfully');
+        }, 3000);
+    }
+}
+
+
+/* Send Money Logics */
 function initScanPay() {
     let to = document.getElementById('scanUpiId').value.trim();
     if (!to) { to = "merchant@upi"; showToast('✅', 'QR Code Scanned'); }
@@ -1793,33 +1951,6 @@ function downloadStatement() {
     }, 1200);
 }
 
-function handleFileSelect(e) { const file = e.target.files[0]; if (file) processFile(file); }
-
-function processFile(file) {
-    if (file.size > 5 * 1024 * 1024) { showToast('⚠️', 'Image too large. Max 5MB.'); return; }
-    const reader = new FileReader();
-    reader.onload = e => {
-        S.imgBase64 = e.target.result.split(',')[1]; S.imgType = file.type;
-        document.getElementById('scannerSection').style.display = 'none';
-        document.getElementById('visionScanArea').style.display = 'block';
-        document.getElementById('uploadContent').innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:180px;border-radius:12px;display:block;margin:0 auto"><div style="margin-top:12px;font-size:14px;color:var(--green);font-weight:700;text-align:center;">✓ ${file.name} ready</div>`;
-        document.getElementById('scanBtn').style.display = 'block';
-        document.getElementById('scanResult').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-}
-
-async function analyzeImage() {
-    if (!S.imgBase64) return;
-    const btn = document.getElementById('scanBtn');
-    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Analyzing…';
-    setTimeout(() => {
-        document.getElementById('scanResult').style.display = 'block';
-        document.getElementById('scanResult').innerHTML = `<div style="padding:16px;border-radius:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;font-size:14px;line-height:1.6">🔍 <strong>Image Analysis (Demo)</strong><br><br>✅ <strong style="color:var(--green)">SAFE</strong> — No obvious fraud patterns detected.<br><br>📌 Never share OTP or click links in SMS. Call your bank on official numbers if unsure.</div>`;
-        btn.disabled = false; btn.innerHTML = 'Analyze Another 🔍';
-    }, 2000);
-}
-
 function mobileNav(panel, activeId) {
     document.querySelectorAll('.mnav-item').forEach(i => i.classList.remove('active'));
     document.getElementById(activeId).classList.add('active');
@@ -1878,6 +2009,34 @@ const DEMO_SCENARIOS = [
             { type: 'speak',           text: 'Transfer of 500 rupees to Rajesh was successful. New balance is 24000 rupees.', lang: 'en-IN', delay: 300 },
             { type: 'pipe',            text: 'Transfer Complete ✓ Balance Updated', color: 'var(--green)', delay: 0 },
         ]
+    },
+    {
+        id: 'vision_scan',
+        lang: 'en', langIdx: 0,
+        badge: '📸 AI Vision',
+        title: 'Bank Error Scanner',
+        subtitle: 'Upload a confusing bank notice',
+        description: 'AI analyzes a frozen account error and breaks down actionable steps for the user automatically.',
+        steps: [
+            { type: 'custom', action: 'open_vision', label: 'Opening AI Vision UI...', delay: 800 },
+            { type: 'custom', action: 'upload_doc', label: 'User uploads "Account Frozen" document...', delay: 1500 },
+            { type: 'custom', action: 'scan_doc', label: 'Dhan-Mitra AI scanning image text & structure...', delay: 3500 },
+            { type: 'custom', action: 'show_result', label: 'Analysis complete. Showing clear summary & next steps.', delay: 1000 },
+            { type: 'speak',  text: 'Your SBI account is temporarily frozen due to pending KYC verification. Tap below to start digital KYC now.', lang: 'en-IN', delay: 0 }
+        ]
+    },
+    {
+        id: 'whatsapp_digest',
+        lang: 'en', langIdx: 0,
+        badge: '📬 WhatsApp',
+        title: 'Weekly Digest',
+        subtitle: 'Proactive Weekly Insights',
+        description: 'Simulates the automated Monday morning WhatsApp message showing expenses, savings and upcoming bills.',
+        steps: [
+            { type: 'custom', action: 'close_modals', label: 'Simulating phone background...', delay: 500 },
+            { type: 'custom', action: 'open_wa', label: 'Receiving automated WhatsApp Digest...', delay: 1200 },
+            { type: 'speak',  text: 'Here is your weekly financial digest sent directly to your WhatsApp. You spent 8% less this week. Do not forget to pay your electricity bill tomorrow.', lang: 'en-IN', delay: 200 }
+        ]
     }
 ];
 
@@ -1910,6 +2069,8 @@ async function runDemoScenario(idx) {
         S.lIdx = 0;
         if (S.balVisible) document.getElementById('balAmt').textContent = '₹' + S.bal.toLocaleString('en-IN');
     }
+    // Reset Vision Modal
+    resetVisionModal();
 
     // Clear old chat messages for clean demo
     const area = document.getElementById('chatArea');
@@ -2024,6 +2185,25 @@ async function runDemoScenario(idx) {
             case 'pipe':
                 setPipe(step.text, step.color);
                 break;
+                
+            case 'custom':
+                updateDemoBanner(step.label);
+                if (step.action === 'open_vision') {
+                    openModal('visionModal');
+                } else if (step.action === 'upload_doc') {
+                    document.getElementById('v-upload-state').style.display = 'none';
+                    document.getElementById('v-scan-state').style.display = 'block';
+                } else if (step.action === 'scan_doc') {
+                    // Let the animation play while sleeping
+                } else if (step.action === 'show_result') {
+                    document.getElementById('v-scan-state').style.display = 'none';
+                    document.getElementById('v-result-state').style.display = 'block';
+                } else if (step.action === 'close_modals') {
+                    document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+                } else if (step.action === 'open_wa') {
+                    openModal('waModal');
+                }
+                break;
         }
     }
 
@@ -2039,7 +2219,7 @@ function stopDemo() {
     demoAbort = true;
     demoRunning = false;
     window.speechSynthesis.cancel();
-    document.getElementById('pinModal').classList.remove('show');
+    document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
     hideDemoBanner();
     setMic('idle');
     setPipe('Demo Stopped', 'var(--amber)');
@@ -2095,7 +2275,7 @@ function injectDemoUI() {
                 <div>
                     <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">🎬 Hackathon Demo Mode</div>
                     <div style="font-size:22px;font-weight:800;color:var(--text)">SwaarDhan Live Demo</div>
-                    <div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5">Two fully automated scenarios · No backend required<br><span style="color:var(--faint);font-size:12px">Works 100% offline · Real TTS voice output</span></div>
+                    <div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5">Fully automated scenarios · No backend required<br><span style="color:var(--faint);font-size:12px">Works 100% offline · Real TTS voice output</span></div>
                 </div>
                 <button onclick="closeDemoPanel()" id="demoCloseBtn">✕</button>
             </div>
@@ -2109,18 +2289,12 @@ function injectDemoUI() {
                     <div class="demo-card-title">${s.title}</div>
                     <div class="demo-card-subtitle">${s.subtitle}</div>
                     <div class="demo-card-desc">${s.description}</div>
-                    <div class="demo-card-steps">
-                        <div class="demo-step-chip">🎤 User speaks in ${s.badge}</div>
-                        <div class="demo-step-chip">🧠 AI detects intent automatically</div>
-                        ${i === 0 ? '<div class="demo-step-chip">🔊 AI responds in Hindi (voice)</div>' : '<div class="demo-step-chip">🔒 PIN entry → Transfer → Balance update</div>'}
-                    </div>
                     <div class="demo-run-btn">▶ Run This Demo</div>
                 </div>`).join('')}
             </div>
             <div id="demoFooter">
                 <div style="font-size:12px;color:var(--faint);text-align:center;line-height:1.8">
-                    💡 Demos run fully automatically with voice synthesis<br>
-                    PIN for transfer demo: <strong style="color:var(--cyan);font-size:14px">1234</strong> · 
+                    💡 Demos run fully automatically with voice synthesis.<br>
                     <span style="color:var(--muted)">Press <strong>■ Stop</strong> anytime to cancel</span>
                 </div>
             </div>
